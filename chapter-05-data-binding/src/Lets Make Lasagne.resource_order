@@ -1,0 +1,25 @@
+{
+  "ResourceOrderSettings": [
+    {"name":"oHud","path":"objects/oHud/oHud.yy","order":3,},
+    {"name":"oCoin","path":"objects/oCoin/oCoin.yy","order":2,},
+    {"name":"sPlayerWalkUp","path":"sprites/sPlayerWalkUp/sPlayerWalkUp.yy","order":4,},
+    {"name":"oPlayer","path":"objects/oPlayer/oPlayer.yy","order":1,},
+    {"name":"sPlayerWalkRight","path":"sprites/sPlayerWalkRight/sPlayerWalkRight.yy","order":2,},
+    {"name":"rTest","path":"rooms/rTest/rTest.yy","order":1,},
+    {"name":"sPlayerWalkDown","path":"sprites/sPlayerWalkDown/sPlayerWalkDown.yy","order":1,},
+    {"name":"sGoldCoin","path":"sprites/sGoldCoin/sGoldCoin.yy","order":7,},
+    {"name":"sPlayerWalkLeft","path":"sprites/sPlayerWalkLeft/sPlayerWalkLeft.yy","order":3,},
+    {"name":"sSilverCoin","path":"sprites/sSilverCoin/sSilverCoin.yy","order":6,},
+    {"name":"sBronzeCoin","path":"sprites/sBronzeCoin/sBronzeCoin.yy","order":5,},
+    {"name":"DataBinding","path":"scripts/DataBinding/DataBinding.yy","order":1,},
+  ],
+  "FolderOrderSettings": [
+    {"name":"Font","path":"folders/Font.yy","order":11,},
+    {"name":"Objects","path":"folders/Objects.yy","order":9,},
+    {"name":"Rooms","path":"folders/Rooms.yy","order":10,},
+    {"name":"Scripts","path":"folders/Scripts.yy","order":5,},
+    {"name":"Sounds","path":"folders/Sounds.yy","order":3,},
+    {"name":"Sprites","path":"folders/Sprites.yy","order":1,},
+    {"name":"Tile Sets","path":"folders/Tile Sets.yy","order":2,},
+  ],
+}
