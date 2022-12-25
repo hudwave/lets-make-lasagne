@@ -12,12 +12,12 @@
     {"name":"sBronzeCoin","path":"sprites/sBronzeCoin/sBronzeCoin.yy","order":5,},
   ],
   "FolderOrderSettings": [
+    {"name":"Font","path":"folders/Font.yy","order":11,},
     {"name":"Objects","path":"folders/Objects.yy","order":9,},
     {"name":"Rooms","path":"folders/Rooms.yy","order":10,},
     {"name":"Scripts","path":"folders/Scripts.yy","order":5,},
     {"name":"Sounds","path":"folders/Sounds.yy","order":3,},
     {"name":"Sprites","path":"folders/Sprites.yy","order":1,},
     {"name":"Tile Sets","path":"folders/Tile Sets.yy","order":2,},
-    {"name":"Font","path":"folders/Font.yy","order":11,},
   ],
 }

@@ -22,17 +22,6 @@
     {"id":{"name":"DataBinding","path":"scripts/DataBinding/DataBinding.yy",},"order":0,},
     {"id":{"name":"rGame","path":"rooms/rGame/rGame.yy",},"order":0,},
   ],
-  "Options": [
-    {"name":"Android","path":"options/android/options_android.yy",},
-    {"name":"HTML5","path":"options/html5/options_html5.yy",},
-    {"name":"iOS","path":"options/ios/options_ios.yy",},
-    {"name":"Linux","path":"options/linux/options_linux.yy",},
-    {"name":"macOS","path":"options/mac/options_mac.yy",},
-    {"name":"tvOS","path":"options/tvos/options_tvos.yy",},
-    {"name":"Windows","path":"options/windows/options_windows.yy",},
-    {"name":"operagx","path":"options/operagx/options_operagx.yy",},
-    {"name":"Main","path":"options/main/options_main.yy",},
-  ],
   "defaultScriptType": 1,
   "isEcma": false,
   "configs": {
@@ -60,6 +49,6 @@
   ],
   "IncludedFiles": [],
   "MetaData": {
-    "IDEVersion": "2023.100.0.252",
+    "IDEVersion": "2023.100.0.259",
   },
 }

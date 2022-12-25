@@ -26,7 +26,7 @@ var player = instance_create_layer(x, y, layer, oPlayer);
 player.setGameController(oGame);
 ```
 
-The advantages of doing things this way is the object being passed the dependency does not have to create or configure the dependency (which may require other dependencies). It can also be passed different configurations when required or even a different version of the object that behaves in an entirely different way (search for "Duck Typing" or "Composition Over Inheritance" for ideas).
+The advantages of doing things this way is the object being passed the dependency does not have to create or configure the dependency (which may require other dependencies itself). It can also be passed different configurations when required or even a different version of the object that behaves in an entirely different way (search for "Duck Typing" or "Composition Over Inheritance" for ideas).
 
 Dependencies do need to be created somewhere though. Usually dependencies will be created nearer the top of the hierarchy of objects such as in controller objects.
 

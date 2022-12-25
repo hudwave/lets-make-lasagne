@@ -5,6 +5,7 @@ enum CoinType {
 }
 
 value = coinType;
+collectSound = sndCoin;
 
 switch (coinType) {
 	case CoinType.BRONZE:
@@ -23,6 +24,6 @@ getValue = function () {
 }
 
 collectCoin = function () {
-	audio_play_sound(sndCoin, 10, false);
+	audio_play_sound(collectSound, 10, false);
 	instance_destroy();
 }

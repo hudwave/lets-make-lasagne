@@ -3,16 +3,20 @@
 # A Lesson In loose coupling: How to throw away the spaghetti code
 
 
-## Lesson 2: Self imposed coding restrictions
+## Lesson 2: Self imposed coding restrictions and good practices
 
 
-Gamemaker gives us the freedom to do stupid things. Before we talk about ways to minimise coupling it's important look at other aspects of Gamemaker that could contribute to code problems. We have to be disciplined and impose some restrictions on ourselves so that we don't end up writing bad code.
+Before we talk about ways to minimise coupling it's important look at some other aspects of Gamemaker that could contribute to code problems. Until recently, Gamemaker's programming language (GML) behaved in a mostly imperative fashion but had a lot of limitations e.g. each script file is a single function! The language is designed around this paradigm (scripts execute in the calling object's scope, `other` keyword, `with` statement). Due to the limitations, I'm genuinely impressed that people managed to create such amazing and complicated games before! I dread to think how difficult it would have been to read, refactor, maintain and debug such a large codebase.
+
+Luckily, we now have first class functions and lightweight objects (structs) which open up a whole world of possibilities and much cleaner code. GML has become a sort of hybrid imperative, functional and part-OOP language (it's still missing some defining features of each paradigm though). GML gives us the freedom to write code in many different ways, but this means we can also do a lot of stupid things. Therefore we need to be disciplined and impose some restrictions on ourselves so that we don't end up writing bad code.
+
+Below are some rules that I adhere to when writing GML. This is just my own opinion and it works for me. There is no right or wrong way to make a game in Gamemaker so go with what works for you. However, you might find that by sticking to these rules, you'll end up naturally writing cleaner code.
 
 ### Direct property access
 
-Gamemaker allows us to directly access the instance variables of an object from a second object and make changes to them. If you're careful and working solo this might be ok; but if you are working in a team then knowing which variables you are allowed to change without causing something obscure to fail is important.
+Gamemaker allows us to directly access the instance variables of an object from a second object and make changes to them. If you're careful and working solo this might be ok; but if you are working in a team then it is important to know which variables you can change without causing something obscure to fail.
 
-There is no language concept of private variables which would restrict access to them so we need to impose this restriction on ourselves.
+There is no language concept of private variables in GML to prevent access to them. So we need to impose this restriction on ourselves.
 
 Some people like to prefix their private variables with an underscore like `_privateVariable`. I generally do not use an underscore for private variables, only for private methods. Instead for variables I will create getter and setter methods.
 
@@ -39,11 +43,11 @@ This has a number of advantages over direct access:
 
 The disadvantages are:
 1. You need to write more code and that takes effort, I sympathise 😩
-2. It creates two functions in memory for each instance variable (This is negligible though. Stop worrying about performance and write good code first!)
+2. It creates up to two functions in memory for each instance variable (This is negligible though. Stop worrying about performance and write good code first!)
 
 Using getters and setters still doesn't prevent us from accessing the properties directly so we need a bit of self control to make sure we stick to this method and actually write the getters/setters.
 
-We'll re-write the scenario code in Lesson 1 to use setters and getters.
+We'll re-write the scenario code to use setters and getters.
 
 ##### oGame::Create
 ```gml
@@ -71,60 +75,26 @@ if (place_meeting(x, y, oCoin)) {
 draw_text(x, y,  "Coins: " + string(oGame.getCoins()));
 ```
 
+### Encapsulation of logic
 
-### The `with` statement and logic encapsulation
+When you start working with Gamemaker as a beginner, you might write most of the logic that controls your objects in the step event. Possibly with many branching if statements to handle different cases that arise and calls to script functions to run additional logic.
 
-The `with` statement allows you to switch to the context of another object and process code as if it were running in the equivalent event of that object. For example when the player collides with the coin we may want to play a sound then destroy it.
+Most beginner tutorials are written in this way because it is simple to understand for beginners and easy to implement. There's nothing inherently wrong with this approach, it is how Gamemaker is designed to work after all. Learning to program and make a game is difficult enough for a beginner without adding on additional complexities such as architectural design choices! But if you find that your step events are becoming quite long and complicated then read on.
 
-##### oPlayer::Step
-```gml
-var coin = instance_place(x, y, oCoin);
+First we need to change how we think about the humble Gamemaker object. If you are familiar with object orientated programming languages we are going to treat the object's create event as if it were a class definition file. This will contain instance variable definitions and methods that operate on these variables.
 
-if (coin != noone) {
-	// Increase the coin total
-	var currentCoins = oGame.getCoins();
-	oGame.setCoins(++currentCoins);
+Think back to the different parts of the complicated step event and what this is actually doing. If you can describe sections of this in a few words e.g. take damage, then it should go into a method instead. This is much more descriptive and makes reading the code easier.
 
-	// Start process of destroying coin
-	with (coin) {
-		audio_play_sound(sndCoin, 10, false);
-		instance_destroy();
-	}
-}
-```
+Thinking in terms of operations and methods has benefits beyond readability. We can now shift the entire perspective of how we code in Gamemaker. Instead of approaching code in a linear and direct fashion where we modify other objects directly from our current object; instead we will call a method on the other object and allow the object to modify itself. This is called encapsulation where we will place logic that operates on the object's data on the object itself.
 
-I believe the `with` statement should be avoided in almost all cases if you want clean code!
-
-The main reason for this is you can create logic that modifies an object and then stores it in a different file, this encouraging spaghetti code by design! If all your code related to one object is spread across multiple files then it becomes more difficult to update the object and harder to see why some side effect is happening when reading your code.
-
-Just setting some values and calling methods already on the object is probably ok. But if you can describe what you are doing to the object in a few words e.g. take damage, then it should probably go in a method instead. This is much more descriptive and makes reading the code easier. However if you know what you're doing, go ahead!
-
-If you need to loop over all instances of the object you can use a for loop instead, using the example from the manual to loop over all instances.
-
-```gml
-for (var i = 0; i < instance_number(oCoin); ++i)
-{
-    var coin = instance_find(oCoin, i);
-	instance_destroy(coin);
-}
-```
-
-On a similar note, in the scenario code why are we allowing the player object to directly set the number coins tracked by the game controller. The player object only needs to inform the game controller that a coin has been collected, not work out a new total. It is often useful to think in terms of operations that can be applied or carried out by objects. These operations can be defined in methods on an object.
-
-We are going to remove the coin setter and add a method to add a single coin instead. We'll also add a method to the coin so that it can be destroyed.
-
-##### oCoin::Create
-```gml
-collectCoin = function () {
-	audio_play_sound(sndCoin, 10, false);
-	instance_destroy();
-}
-```
+Lets look at an example from the scenario. In the player's step event we are allowing the player object to calculate a new coin total and then set the number coins tracked by the game controller. The operation here is that a coin is being added to the game controller. The player object only needs to inform the game controller that a coin has been collected, not work out a new total. We can add a method to the game controller called `addCoin`.
 
 ##### oGame::Create
 ```gml
+// Variable definitions
 coins = 0;
 
+// Methods
 getCoins = function () {
 	return coins;
 }
@@ -142,12 +112,61 @@ if (coin != noone) {
 	oGame.addCoin();
 
 	// Start process of destroying coin
+	with (coin) {
+		audio_play_sound(collectSound, 10, false);
+		instance_destroy();
+	}
+}
+```
+
+The logic for adding coins is now encapsulated in the game controller. If we follow our self imposed restrictions of not accessing the variable directly then there is now no way to change the value of coins arbitrarily. We can only read it using the setter, or add a single coin using the predefined method.
+
+One additional advantage of encapsulating the logic in the game controller is that coins can be now added by objects other than the player. Imagine you have a shop and you sell an item for money. The shop object can call `addCoin` in the same way the player can. You don't need to duplicate the logic in other places.
+
+Now lets look at the next problem.
+
+
+### The `with` statement
+
+The `with` statement allows you to switch to the context of another object and process code as if it were running in the equivalent event of that object. For example in the scenario code, when the player collides with the coin we are switching to the coin's context to play a sound then destroy it.
+
+I believe the `with` statement should be avoided in almost all cases if you want clean code[^1]. It is a remnant of the old way of working in Gamemaker and is directly opposed to the encapsulation principle in outlined in the previous section.
+
+The main problem is that you can create logic that that is core to way an object functions or behaves and then store it in the file of an entirely different object. This is spaghetti code by design! If all your code related to one object is spread across multiple files then it becomes more difficult to update the object and harder to see why some side effect is happening when reading your code. Your code base just became tangled!
+
+We'll replace the with statement with a new method to the coin so that it can be destroyed.
+
+##### oCoin::Create
+```gml
+collectCoin = function () {
+	audio_play_sound(sndCoin, 10, false);
+	instance_destroy();
+}
+```
+
+##### oPlayer::Step
+```gml
+var coin = instance_place(x, y, oCoin);
+if (coin != noone) {
+	// Increase the coin total
+	oGame.addCoin();
+
+	// Start process of destroying coin
 	coin.collectCoin();
 }
 ```
 
-If we follow our self imposed restrictions of not accessing the variable directly then there is now no way to change the value of coins arbitrarily. We can only read it using the setter, or add a single coin using the predetermined method.
+`with` is often used as a convenient way to loop over all objects of a specific type. This can also be done using `instance_number` and `instance_find`. It's a bit more verbose but fits better with the style of encapsulating an object's logic in methods.
 
-If there was no setter or getter then we would not be able to view or change the value at all.
+```gml
+for (var i = 0; i < instance_number(oCoin); ++i) {
+    var coin = instance_find(oCoin, i);
+	instance_destroy(coin);
+}
+```
 
 In the next chapter we will look at our first method of decoupling.
+
+## Footnotes
+[^1]: If you know what you're doing with `with` go ahead and use it!
+```

@@ -19,17 +19,6 @@
     {"id":{"name":"oGame","path":"objects/oGame/oGame.yy",},"order":0,},
     {"id":{"name":"rGame","path":"rooms/rGame/rGame.yy",},"order":0,},
   ],
-  "Options": [
-    {"name":"Android","path":"options/android/options_android.yy",},
-    {"name":"HTML5","path":"options/html5/options_html5.yy",},
-    {"name":"iOS","path":"options/ios/options_ios.yy",},
-    {"name":"Linux","path":"options/linux/options_linux.yy",},
-    {"name":"macOS","path":"options/mac/options_mac.yy",},
-    {"name":"tvOS","path":"options/tvos/options_tvos.yy",},
-    {"name":"Windows","path":"options/windows/options_windows.yy",},
-    {"name":"operagx","path":"options/operagx/options_operagx.yy",},
-    {"name":"Main","path":"options/main/options_main.yy",},
-  ],
   "defaultScriptType": 1,
   "isEcma": false,
   "configs": {
@@ -40,13 +29,13 @@
     {"roomId":{"name":"rGame","path":"rooms/rGame/rGame.yy",},},
   ],
   "Folders": [
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Font","folderPath":"folders/Font.yy","order":0,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Objects","folderPath":"folders/Objects.yy","order":9,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Rooms","folderPath":"folders/Rooms.yy","order":10,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Scripts","folderPath":"folders/Scripts.yy","order":5,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sounds","folderPath":"folders/Sounds.yy","order":3,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Sprites.yy","order":1,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Tile Sets","folderPath":"folders/Tile Sets.yy","order":2,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Font","folderPath":"folders/Font.yy","order":0,},
   ],
   "AudioGroups": [
     {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},
@@ -56,6 +45,6 @@
   ],
   "IncludedFiles": [],
   "MetaData": {
-    "IDEVersion": "2023.100.0.252",
+    "IDEVersion": "2023.100.0.259",
   },
 }

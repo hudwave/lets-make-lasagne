@@ -5,6 +5,7 @@ enum CoinType {
 }
 
 value = coinType;
+collectSound = sndCoin;
 
 switch (coinType) {
 	case CoinType.BRONZE:
