@@ -444,4 +444,4 @@ exitState = function () {
 
 [^2]: It is also valid to connect an object's own signals to itself or make use of signals of an object passed in by dependency injection.
 
-## [← Previous](chapter-04-signals/chapter-04-signals.md) | [Next →](chapter-05-data-binding/chapter-05-data-binding.md)
+## [← Previous](/chapter-04-signals/chapter-04-signals.md) | [Next →](/chapter-05-data-binding/chapter-05-data-binding.md)

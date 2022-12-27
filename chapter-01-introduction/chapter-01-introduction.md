@@ -76,7 +76,7 @@ Strong coupling of dependencies can lead to tangled spaghetti code. We want to b
 
 Now, its impossible to write code without any dependencies at all but there are strategies to minimise their coupling. These will be discussed in future chapters.
 
-## [Next →](chapter-02-self-imposed-restrictions/chapter-02-self-imposed-restrictions.md)
+## [Next →](/chapter-02-self-imposed-restrictions/chapter-02-self-imposed-restrictions.md)
 
 ## Footnotes
 

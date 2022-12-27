@@ -166,7 +166,7 @@ for (var i = 0; i < instance_number(oCoin); ++i) {
 
 In the next chapter we will look at our first method of decoupling.
 
-## [← Previous](chapter-02-self-imposed-restrictions/chapter-02-self-imposed-restrictions.md) | [Next →](chapter-03-dependency-injection/chapter-03-dependency-injection.md)
+## [← Previous](/chapter-02-self-imposed-restrictions/chapter-02-self-imposed-restrictions.md) | [Next →](/chapter-03-dependency-injection/chapter-03-dependency-injection.md)
 
 ## Footnotes
 

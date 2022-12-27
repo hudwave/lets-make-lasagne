@@ -383,4 +383,4 @@ Look into implementing the update pattern. If you know that this is a use case y
 
 Thanks for reading if you made it this far. I might write more chapters if people have found this useful. If you have any comments or suggestions you can leave them in the GMC forums in this thread here:
 
-## [← Previous](chapter-05-data-binding/chapter-05-data-binding.md)
+## [← Previous](/chapter-05-data-binding/chapter-05-data-binding.md)
