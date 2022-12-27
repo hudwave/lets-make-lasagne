@@ -3,12 +3,12 @@
 # A Lesson In loose coupling: How to throw away the spaghetti code
 
 
-## Lesson 2: Self imposed coding restrictions and good practices
+## Chapter 2: Self imposed coding restrictions and good practices
 
 
 Before we talk about ways to minimise coupling it's important look at some other aspects of Gamemaker that could contribute to code problems. Until recently, Gamemaker's programming language (GML) behaved in a mostly imperative fashion but had a lot of limitations e.g. each script file is a single function! The language is designed around this paradigm (scripts execute in the calling object's scope, `other` keyword, `with` statement). Due to the limitations, I'm genuinely impressed that people managed to create such amazing and complicated games before! I dread to think how difficult it would have been to read, refactor, maintain and debug such a large codebase.
 
-Luckily, we now have first class functions and lightweight objects (structs) which open up a whole world of possibilities and much cleaner code. GML has become a sort of hybrid imperative, functional and part-OOP language (it's still missing some defining features of each paradigm though). GML gives us the freedom to write code in many different ways, but this means we can also do a lot of stupid things. Therefore we need to be disciplined and impose some restrictions on ourselves so that we don't end up writing bad code.
+Luckily, we now have first class functions and lightweight objects (structs) which open up a whole world of possibilities and much cleaner code. GML has become a sort of hybrid imperative, functional and part object orientated language (it's still missing some defining features of each paradigm though). All these options in GML gives us the freedom to write code in many ways, but this means we can also do a lot of stupid things. Therefore we need to be disciplined and impose some restrictions on ourselves so that we don't end up writing bad code.
 
 Below are some rules that I adhere to when writing GML. This is just my own opinion and it works for me. There is no right or wrong way to make a game in Gamemaker so go with what works for you. However, you might find that by sticking to these rules, you'll end up naturally writing cleaner code.
 
@@ -123,8 +123,7 @@ The logic for adding coins is now encapsulated in the game controller. If we fol
 
 One additional advantage of encapsulating the logic in the game controller is that coins can be now added by objects other than the player. Imagine you have a shop and you sell an item for money. The shop object can call `addCoin` in the same way the player can. You don't need to duplicate the logic in other places.
 
-Now lets look at the next problem.
-
+In general I would recommend keeping events other than the create event as lean as possible by encapsulating logic in methods in the create event.
 
 ### The `with` statement
 
@@ -167,6 +166,8 @@ for (var i = 0; i < instance_number(oCoin); ++i) {
 
 In the next chapter we will look at our first method of decoupling.
 
+## [← Previous](chapter-02-self-imposed-restrictions/chapter-02-self-imposed-restrictions.md) | [Next →](chapter-03-dependency-injection/chapter-03-dependency-injection.md)
+
 ## Footnotes
+
 [^1]: If you know what you're doing with `with` go ahead and use it!
-```

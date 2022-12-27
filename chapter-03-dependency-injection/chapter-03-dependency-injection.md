@@ -3,7 +3,7 @@
 # A Lesson In loose coupling: How to throw away the spaghetti code
 
 
-## Lesson 3: Dependency Injection
+## Chapter 3: Dependency Injection
 
 
 This first one is a classic - Dependency Injection. It's useful, although perhaps more so in a fully object orientated language and particularly for aiding unit testing. But it can still help to untangle some of our spaghetti and has other benefits too.
@@ -138,3 +138,5 @@ oPlayer.setGameController(mockGameController);
 ```
 
 The player can now pick up a coin without it crashing. This would become tiresome if we had to mock a large number of dependencies or if the mock needs to be more complex. But there is a better way to decouple the player and the game controller as we will see in the next chapter. Even so, you may still find dependency injection useful for some problems.
+
+## [← Previous](chapter-03-dependency-injection/chapter-03-dependency-injection.md) | [Next →](chapter-04-signals/chapter-04-signals.md)

@@ -3,7 +3,7 @@
 # A Lesson In loose coupling: How to throw away the spaghetti code
 
 
-## Lesson 4: Signals (Observer Pattern)
+## Chapter 4: Signals (Observer Pattern)
 
 This one is a game changer. This might be the most important piece of code you write and add to your projects. It's an implementation of the observer pattern. Again there are entire books dedicated to design patterns and I don't want to scare people away so we're going to talk about how it works in practice rather than with UML diagrams.
 
@@ -443,3 +443,5 @@ exitState = function () {
 [^1]: Observant readers will notice that we have accessed the signal directly, going against our own self imposed rules! 😱 In this instance we are going to take the other piece of important advice and choose to ignore it this time. A new self imposed rule that signals should be accessed directly, this will make it feel like they are a first class language feature.
 
 [^2]: It is also valid to connect an object's own signals to itself or make use of signals of an object passed in by dependency injection.
+
+## [← Previous](chapter-04-signals/chapter-04-signals.md) | [Next →](chapter-05-data-binding/chapter-05-data-binding.md)

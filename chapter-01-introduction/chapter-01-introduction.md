@@ -3,7 +3,7 @@
 # A Lesson In loose coupling: How to throw away the spaghetti code
 
 
-## Lesson 1 - Introduction to dependencies
+## Chapter 1 - Introduction to dependencies
 
 
 ### Introduction
@@ -75,6 +75,8 @@ What we need to do is untangle the spaghetti, in programming terms this is calle
 Strong coupling of dependencies can lead to tangled spaghetti code. We want to be in a position where making a change to one object doesn't cause massive ripples throughout the codebase. In the simplest terms, in Gamemaker a dependency is when an object needs to call another external object to complete its task. The fewer dependencies you rely on the less likely your code will break when changes are made.
 
 Now, its impossible to write code without any dependencies at all but there are strategies to minimise their coupling. These will be discussed in future chapters.
+
+## [Next →](chapter-02-self-imposed-restrictions/chapter-02-self-imposed-restrictions.md)
 
 ## Footnotes
 

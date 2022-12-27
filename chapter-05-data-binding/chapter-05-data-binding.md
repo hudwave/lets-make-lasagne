@@ -3,7 +3,7 @@
 # A Lesson In loose coupling: How to throw away the spaghetti code
 
 
-## Lesson 5: Data binding
+## Chapter 5: Data binding
 
 This chapter is going to build on concepts introduced in the previous chapters to implement a rudimentary data binding system. Data binding will allow us to synchronise the value of a variable between two objects. But we will do this in a way that means the two objects don't even need to know about the existence of each other!
 
@@ -383,4 +383,4 @@ Look into implementing the update pattern. If you know that this is a use case y
 
 Thanks for reading if you made it this far. I might write more chapters if people have found this useful. If you have any comments or suggestions you can leave them in the GMC forums in this thread here:
 
-
+## [← Previous](chapter-05-data-binding/chapter-05-data-binding.md)
