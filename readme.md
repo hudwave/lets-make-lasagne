@@ -2,7 +2,7 @@
 
 # A Lesson In loose coupling: How to throw away the spaghetti code
 
-Welcome! This tutorial is aimed at intermediate Gamemaker programmers who know there is something wrong or clunky with their code but don't know how to take it to the next level. The main focus of this series is to look at ways write cleaner more maintainable code. There are currently 5 chapters but I may add more over time.
+Welcome! This tutorial is aimed at intermediate Gamemaker programmers who know there is something clunky or not quite right with their code but don't know how to take it to the next level. The main focus of this series is to look at ways write cleaner more maintainable code. There are currently 5 chapters but I may add more over time.
 
 ## Table of contents
 1. [Introduction](/chapter-01-introduction/chapter-01-introduction.md)

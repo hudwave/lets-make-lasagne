@@ -12,7 +12,7 @@ Gamemaker is great for rapidly prototyping stuff[^1]. You have complete global a
 
 We're going to closely examine one scenario to show why global access can be bad and how we can write nice clean code instead. The scenario is deliberately simple so that it's easy to follow. There are accompanying source files for each chapter. The code reflects how the project should look at the end of the chapter. This chapter doesn't contain any changes so if you want to follow along and write the code yourself, take the project from the chapter 1 folder and add to it from there.
 
-This tutorial is aimed at intermediate programmers who know there is something wrong or clunky with their code but don't know how to take it to the next level.
+This tutorial is aimed at intermediate programmers who know there is something clunky or not quite right with their code but don't know how to take it to the next level.
 
 It will introduce some concepts that help solve certain problems you might face when designing systems in your game. These are only tools however, learning when and where to apply them and when to ignore them will come with experience. And it IS valid to ignore them when it makes sense to do so. We need to learn what these tools are though first so lets begin!
 
