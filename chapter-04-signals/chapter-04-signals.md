@@ -65,7 +65,7 @@ Now we need to actually implement the `Signal` class.
 
 ### Implementing the `Signal` class
 
-Create a new script and call it Signals. Add a new constructor function called `Signal`. We only need one instance variable which will be an array of the listeners connected to the signal. Lets also add empty methods for connect and emit that we discussed in the section above.
+Create a new script and call it Signals. Add a new constructor function called `Signal`. We only need one instance variable which will be an array of the listeners connected to the signal. Lets also add empty methods for `connect` and `emit` that we discussed in the section above.
 
 ##### Signals.gml
 ```gml
@@ -82,7 +82,7 @@ function Signal() constructor {
 }
 ```
 
-We also need a small data class called `Listener` to store the details of each listener. This can be added to the bottom of `Signals.gml`.
+We also need a small data class called `Listener` to store the details of each listener (object reference and callback function). This can be added to the bottom of `Signals.gml`.
 
 ##### Signals.gml
 ```gml
@@ -163,7 +163,7 @@ This is the simplest possible version of the pattern. You could use it in this s
 
 In the implementation above, when the signal is emitted we check to see if the object instance exists before calling the callback function. If we want to support structs then we need to handle them differently. Not only do they have a different method to check for their existence but they are also handled differently in memory than object instances.
 
-If an object instance is not marked as persistent then it be removed from memory when the room changes or if it is manually destroyed.
+If an object instance is not marked as persistent then it will be removed from memory when the room changes or if it is manually destroyed.
 
 Structs however are removed by the garbage collector when no other object or struct holds a reference to it. A reference to the struct is the same thing as storing the struct as an instance variable.
 
@@ -194,7 +194,7 @@ function Listener(_target, _callback) constructor {
 }
 ```
 
-Now that the struct is wrapped in a weak reference the `getTarget` method will return the weak reference instead of the struct itself. We need to have a different implementation of the getter based on whether or not the target is an object or an instance. Another win for using getters and setters! Well also add a convenience method to check whether the object or struct still exists. This will also have a different implementation for objects and structs.
+Now that the struct is wrapped in a weak reference the `getTarget` method will return the weak reference instead of the struct itself which is not what we want. We need to have a different implementation of the getter based on whether or not the target is an object or an instance. Another win for using getters and setters! We'll also add a convenience method to check whether the object or struct still exists. This will also have a different implementation for objects and structs.
 
 ##### Signals.gml::Listener
 ```gml
@@ -280,6 +280,8 @@ function Listener(_target, _callback) constructor {
 		return callback;
 	}
 
+	// Add the call to init at the end of the class
+	// Or remove it and call it manually from another object
 	init(_target);
 }
 ```
@@ -389,7 +391,7 @@ You might need to know when an animation has ended. Instead of checking the obje
 
  #### Collisions
 
-If you have a collision area that needs to track when an object enters and exits add signals! This can be used to create a generic trigger area (this is coming on the roadmap as a new asset type but you can do it now!)
+If you have a collision area that needs to track when an object enters and exits, add signals! This can be used to create a generic trigger area (this is coming on the roadmap as a new asset type but you can do it now!)
 
  ```gml
 objectEntered = new Signal();

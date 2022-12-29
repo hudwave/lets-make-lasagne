@@ -6,7 +6,7 @@
 ## Chapter 2: Self imposed coding restrictions and good practices
 
 
-Before we talk about ways to minimise coupling it's important look at some other aspects of Gamemaker that could contribute to code problems. Until recently, Gamemaker's programming language (GML) behaved in a mostly imperative fashion but had a lot of limitations e.g. each script file is a single function! The language is designed around this paradigm (scripts execute in the calling object's scope, `other` keyword, `with` statement). Due to the limitations, I'm genuinely impressed that people managed to create such amazing and complicated games before! I dread to think how difficult it would have been to read, refactor, maintain and debug such a large codebase.
+Before we talk about ways to minimise coupling it's important look at some other aspects of Gamemaker that could contribute to code problems. Until recently, Gamemaker's programming language (GML) behaved in a mostly imperative fashion but had a lot of limitations e.g. each script file is a single function. The language is designed around this paradigm (scripts execute in the calling object's scope, `other` keyword, `with` statement). Due to the limitations, I'm genuinely impressed that people managed to create such amazing and complicated games before! I dread to think how difficult it would have been to read, refactor, maintain and debug such a large codebase.
 
 Luckily, we now have first class functions and lightweight objects (structs) which open up a whole world of possibilities and much cleaner code. GML has become a sort of hybrid imperative, functional and part object orientated language (it's still missing some defining features of each paradigm though). All these options in GML gives us the freedom to write code in many ways, but this means we can also do a lot of stupid things. Therefore we need to be disciplined and impose some restrictions on ourselves so that we don't end up writing bad code.
 
@@ -39,7 +39,8 @@ This has a number of advantages over direct access:
 2. You can add additional code to the setter to do validation of the new value or perform some additional side effect.
 3. The getter value does not need to be calculated until it is actually needed. You can check to see if the value is `undefined` when the getter is called and calculate it if required. This is called lazy instantiation. This might be useful if the calculation of a value is particularly costly but might never be needed.
 4. Getters and setters can be used as callback functions.
-5. We will do something cool by overriding the setters in Chapter 5. This is only possible if you are consistent and write all of your code around getters and setters.
+
+We will also do something cool by overriding the setters in Chapter 5. This is only possible if you are consistent and write all of your code around getters and setters.
 
 The disadvantages are:
 1. You need to write more code and that takes effort, I sympathise 😩
@@ -79,15 +80,15 @@ draw_text(x, y,  "Coins: " + string(oGame.getCoins()));
 
 When you start working with Gamemaker as a beginner, you might write most of the logic that controls your objects in the step event. Possibly with many branching if statements to handle different cases that arise and calls to script functions to run additional logic.
 
-Most beginner tutorials are written in this way because it is simple to understand for beginners and easy to implement. There's nothing inherently wrong with this approach, it is how Gamemaker is designed to work after all. Learning to program and make a game is difficult enough for a beginner without adding on additional complexities such as architectural design choices! But if you find that your step events are becoming quite long and complicated then read on.
+Most beginner tutorials are written in this way because it is simple to understand for beginners and easy to implement. There's nothing inherently wrong with this approach, it is how Gamemaker is designed to work after all. Learning to program and make a game is difficult enough for a beginner without adding on additional nuances such as programming styles! But if you find that your step events are becoming quite long and complicated then read on.
 
 First we need to change how we think about the humble Gamemaker object. If you are familiar with object orientated programming languages we are going to treat the object's create event as if it were a class definition file. This will contain instance variable definitions and methods that operate on these variables.
 
-Think back to the different parts of the complicated step event and what this is actually doing. If you can describe sections of this in a few words e.g. take damage, then it should go into a method instead. This is much more descriptive and makes reading the code easier.
+Think back to the different parts of the complicated step event and what this is actually doing. If you can describe sections of this in a few words e.g. take damage, then it is a candidate to go into a method instead. This is much more descriptive and makes reading the code easier.
 
 Thinking in terms of operations and methods has benefits beyond readability. We can now shift the entire perspective of how we code in Gamemaker. Instead of approaching code in a linear and direct fashion where we modify other objects directly from our current object; instead we will call a method on the other object and allow the object to modify itself. This is called encapsulation where we will place logic that operates on the object's data on the object itself.
 
-Lets look at an example from the scenario. In the player's step event we are allowing the player object to calculate a new coin total and then set the number coins tracked by the game controller. The operation here is that a coin is being added to the game controller. The player object only needs to inform the game controller that a coin has been collected, not work out a new total. We can add a method to the game controller called `addCoin`.
+Lets look at an example from the scenario. In the player's step event we are allowing the player object to calculate a new coin total and then set the number coins tracked by the game controller. The operation here is that a coin is being added to the game controller. The player object only needs to inform the game controller that a coin has been collected, not work out a new total. We can add a method to the game controller called `addCoin`. The setter we had previously is no longer needed so lets remove that too.
 
 ##### oGame::Create
 ```gml
@@ -133,12 +134,14 @@ I believe the `with` statement should be avoided in almost all cases if you want
 
 The main problem is that you can create logic that that is core to way an object functions or behaves and then store it in the file of an entirely different object. This is spaghetti code by design! If all your code related to one object is spread across multiple files then it becomes more difficult to update the object and harder to see why some side effect is happening when reading your code. Your code base just became tangled!
 
-We'll replace the with statement with a new method to the coin so that it can be destroyed.
+We'll replace the with statement with a new method on the coin object so that it can be destroyed.
 
 ##### oCoin::Create
 ```gml
+collectSound = sndCoin;
+
 collectCoin = function () {
-	audio_play_sound(sndCoin, 10, false);
+	audio_play_sound(collectSound, 10, false);
 	instance_destroy();
 }
 ```
@@ -158,9 +161,9 @@ if (coin != noone) {
 `with` is often used as a convenient way to loop over all objects of a specific type. This can also be done using `instance_number` and `instance_find`. It's a bit more verbose but fits better with the style of encapsulating an object's logic in methods.
 
 ```gml
-for (var i = 0; i < instance_number(oCoin); ++i) {
-    var coin = instance_find(oCoin, i);
-	instance_destroy(coin);
+for (var i = 0; i < instance_number(oCoin); i++) {
+	var coin = instance_find(oCoin, i);
+	coin.collectCoin();
 }
 ```
 
