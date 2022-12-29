@@ -408,6 +408,6 @@ Look into implementing the update pattern. If you know that this is a use case y
 
 #### The End
 
-Thanks for reading if you made it this far. I might write more chapters if people have found this useful. If you have any comments or suggestions you can leave them in the GMC forums in this thread here:
+Thanks for reading if you made it this far. I might write more chapters if people have found this useful. If you have any comments or suggestions you can leave them in the GMC forums in this thread [here](https://forum.gamemaker.io/index.php?threads/lets-make-lasagne-a-clean-code-tutorial-series.100427/).
 
 ## [← Previous](/chapter-05-data-binding/chapter-05-data-binding.md)
