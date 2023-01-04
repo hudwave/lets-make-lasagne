@@ -1,6 +1,6 @@
 # Lets make lasagne
 
-# A Lesson In loose coupling: How to throw away the spaghetti code
+# A Lesson in loose coupling: How to throw away the spaghetti code
 
 
 ## Chapter 3: Dependency Injection

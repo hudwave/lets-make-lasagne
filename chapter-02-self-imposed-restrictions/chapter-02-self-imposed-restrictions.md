@@ -1,6 +1,6 @@
 # Lets make lasagne
 
-# A Lesson In loose coupling: How to throw away the spaghetti code
+# A Lesson in loose coupling: How to throw away the spaghetti code
 
 
 ## Chapter 2: Self imposed coding restrictions and good practices
@@ -120,7 +120,7 @@ if (coin != noone) {
 }
 ```
 
-The logic for adding coins is now encapsulated in the game controller. If we follow our self imposed restrictions of not accessing the variable directly then there is now no way to change the value of coins arbitrarily. We can only read it using the setter, or add a single coin using the predefined method.
+The logic for adding coins is now encapsulated in the game controller. If we follow our self imposed restrictions of not accessing the variable directly then there is now no way to change the value of coins arbitrarily. We can only read it using the getter, or add a single coin using the predefined method.
 
 One additional advantage of encapsulating the logic in the game controller is that coins can be now added by objects other than the player. Imagine you have a shop and you sell an item for money. The shop object can call `addCoin` in the same way the player can. You don't need to duplicate the logic in other places.
 
