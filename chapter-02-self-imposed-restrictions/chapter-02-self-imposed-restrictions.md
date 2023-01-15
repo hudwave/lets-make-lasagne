@@ -1,6 +1,6 @@
 # Lets make lasagne
 
-# A Lesson in loose coupling: How to throw away the spaghetti code
+# A lesson in loose coupling: How to throw away the spaghetti code
 
 
 ## Chapter 2: Self imposed coding restrictions and good practices
@@ -166,6 +166,15 @@ for (var i = 0; i < instance_number(oCoin); i++) {
 	coin.collectCoin();
 }
 ```
+
+### Pre-define all variables in objects
+In Gamemaker it is possible to add new variables to an object or constructor struct after it has been created. All values that an object requires for it's use should be pre-defined even if that value is `undefined`.
+
+For an object you can define variables in 'Variable Definitions' section of the object inspector, by passing in a struct in the `instance_create_` methods, or by defining them in the create event. For a constructor function all variables should be defined in the function itself.
+
+Note that this doesn't apply to regular structs that are used as a map data container. You can set keys on these at any time otherwise its use as a data structure would be limited.
+
+Similar to the reasoning in the `with` statement, it is possible to add new properties from another object. But this can lead to confusing code that is harder to maintain. If all the variables are pre-defined anyone reading the code has a clear picture of everything the object can do.
 
 In the next chapter we will look at our first method of decoupling.
 
