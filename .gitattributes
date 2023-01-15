@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Detect project files as GML
+*.yy linguist-language=GML
