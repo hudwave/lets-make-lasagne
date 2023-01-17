@@ -11,6 +11,7 @@ Welcome! This tutorial is aimed at intermediate Gamemaker programmers who know t
 4. [Signals (Observer Pattern)](/chapter-04-signals/chapter-04-signals.md)
 5. [Data Binding](/chapter-05-data-binding/chapter-05-data-binding.md)
 6. [Avoiding Inheritance](/chapter-06-beyond-inheritance/chapter-06-beyond-inheritance.md)
+- [Appendix](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md)
 
 ## Credits & Usage
 
