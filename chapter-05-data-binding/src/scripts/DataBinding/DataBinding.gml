@@ -32,14 +32,14 @@ function data_bind(source, sourceProperty, target, targetProperty) {
 		var sourceSetter = undefined;
 		if (is_struct(source)) {
 			sourceSetter = function (newValue) {
-				this[$ property] = newValue
-				signal.emit(newValue);
+				self[$ other.property] = newValue
+				other.signal.emit(newValue);
 			};
 		}
 		else {
 			sourceSetter = function (newValue) {
-				variable_instance_set(this, property, newValue);
-				signal.emit(newValue);
+				variable_instance_set(self, other.property, newValue);
+				other.signal.emit(newValue);
 			};
 		}
 		
@@ -60,12 +60,12 @@ function data_bind(source, sourceProperty, target, targetProperty) {
 		// Create a setter for the target
 		if (is_struct(target)) {
 			targetSetter = function (newValue) {
-				this[$ property] = newValue;
+				self[$ other.property] = newValue;
 			};
 		}
 		else {
 			targetSetter = function (newValue) {
-				variable_instance_set(this, property, newValue);
+				variable_instance_set(self, other.property, newValue);
 			};
 		}
 		
@@ -82,9 +82,35 @@ function data_bind(source, sourceProperty, target, targetProperty) {
 
 // Function to generate closures
 function closure(scopeVars, func, context = undefined) {
+	// Ensure there is a context
 	context ??= self;
-	scopeVars[$ "this"] = context;
-	return method(scopeVars, func);
+	
+	// Remove context from the original function
+	func = method(undefined, func);
+	
+	// Add context and original function to the captured scope variables
+	scopeVars[$ "__this"] = context;
+	scopeVars[$ "__func"] = func;
+	
+	// Create the closure function
+	var closureFunc = function () {
+		// Generate array of args
+		var __args = [];
+		for (var i = 0; i < argument_count; i++) {
+			array_push(__args, argument[i]);
+		}
+		
+		// Switch to original context to execute the function
+		// Captured variables will appear on other when the function is executed
+		with (__this) {
+			method_call(other.__func, __args);
+		}
+	};
+	
+	// Bind the closure to the captured scope variables struct
+	closureFunc = method(scopeVars, closureFunc);
+	
+	return closureFunc;
 }
 
 // Helper function to generate setter names

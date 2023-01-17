@@ -233,28 +233,54 @@ var scopeVars = {
 
 // Create a setter function
 var sourceSetter = function (newValue) {
-	self[$ property] = newValue;
-	signal.emit(newValue);
+	self[$ other.property] = newValue
+	other.signal.emit(newValue);
 };
 
-// Create closure and put setter on source struct
-source[$ sourceSetterName] = method(scopeVars, sourceSetter);
+// Create closure
+source[$ sourceSetterName] = closure(scopeVars, sourceSetter, source)
 ```
 
-We are going to bind the setter function to the `scopeVars` struct instead of the source object. This means that we can access the `signal` and `property` directly. But now `self` no longer refers to the source object so we would be setting the `newValue` on the `scopeVars` struct. Obviously we don't want to do this so here's where the self imposed restriction comes in.
+Second we define the closure method. Anywhere we want to refer to the variables in `scopeVars` we will need to access them via the key word `other`.
 
-In a closure, any place we want to refer to a variable on the 'original' `self` context will be accessed via `this` instead. To make things simpler lets define a function which will create a closure and add `this` to the scope variables.
+Finally the closure is created by calling the `closure` function and passing in both the `scopeVars` and the closure method. This is defined below.
 
 ##### DataBinding.gml::closure
 ```gml
 function closure(scopeVars, func, context = undefined) {
+	// Ensure there is a context
 	context ??= self;
-	scopeVars[$ "this"] = context;
-	return method(scopeVars, func);
+	
+	// Remove context from the original function
+	func = method(undefined, func);
+	
+	// Add context and original function to the captured scope variables
+	scopeVars[$ "__this"] = context;
+	scopeVars[$ "__func"] = func;
+	
+	// Create the closure function
+	var closureFunc = function () {
+		// Generate array of args
+		var __args = [];
+		for (var i = 0; i < argument_count; i++) {
+			array_push(__args, argument[i]);
+		}
+		
+		// Switch to original context to execute the function
+		// Captured variables will appear on other when the function is executed
+		with (__this) {
+			method_call(other.__func, __args);
+		}
+	};
+	
+	// Bind the closure to the captured scope variables struct
+	closureFunc = method(scopeVars, closureFunc);
+	
+	return closureFunc;
 }
 ```
 
-If the context is undefined then it will default to the calling object. Lets look at how all this changes the `data_bind` code.
+You can read more about how the closure function works in [Appendix A](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md). But for now you can trust this works so lets look at how this changes the `data_bind` code.
 
 ##### DataBinding.gml::data_bind
 ```gml
@@ -281,14 +307,14 @@ function data_bind(source, sourceProperty, target, targetProperty) {
 		var sourceSetter = undefined;
 		if (is_struct(source)) {
 			sourceSetter = function (newValue) {
-				this[$ property] = newValue
-				signal.emit(newValue);
+				self[$ other.property] = newValue
+				other.signal.emit(newValue);
 			};
 		}
 		else {
 			sourceSetter = function (newValue) {
-				variable_instance_set(this, property, newValue);
-				signal.emit(newValue);
+				variable_instance_set(self, other.property, newValue);
+				other.signal.emit(newValue);
 			};
 		}
 		
@@ -299,9 +325,7 @@ function data_bind(source, sourceProperty, target, targetProperty) {
 
 // Function to generate closures
 function closure(scopeVars, func, context = undefined) {
-	context ??= self;
-	scopeVars[$ "this"] = context;
-	return method(scopeVars, func);
+	// ...
 }
 ```
 
@@ -336,12 +360,12 @@ function data_bind(source, sourceProperty, target, targetProperty) {
 		// Create a setter for the target
 		if (is_struct(target)) {
 			targetSetter = function (newValue) {
-				this[$ property] = newValue;
+				self[$ other.property] = newValue;
 			};
 		}
 		else {
 			targetSetter = function (newValue) {
-				variable_instance_set(this, property, newValue);
+				variable_instance_set(self, other.property, newValue);
 			};
 		}
 		
