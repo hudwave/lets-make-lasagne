@@ -14,7 +14,7 @@ Below are some rules that I adhere to when writing GML. This is just my own opin
 
 ### Direct property access
 
-Gamemaker allows us to directly access the instance variables of an object from a second object and make changes to them. If you're careful and working solo this might be ok; but if you are working in a team then it is important to know which variables you can change without causing something obscure to fail.
+Gamemaker allows us to directly access the properties (instance variables and methods) of an object from a second object and make changes to them. If you're careful and working solo this might be ok; but if you are working in a team then it is important to know which variables you can change without causing something obscure to fail.
 
 There is no language concept of private variables in GML to prevent access to them. So we need to impose this restriction on ourselves.
 
@@ -39,6 +39,7 @@ This has a number of advantages over direct access:
 2. You can add additional code to the setter to do validation of the new value or perform some additional side effect.
 3. The getter value does not need to be calculated until it is actually needed. You can check to see if the value is `undefined` when the getter is called and calculate it if required. This is called lazy instantiation. This might be useful if the calculation of a value is particularly costly but might never be needed.
 4. Getters and setters can be used as callback functions.
+5. It is now trivial to debug when a value is set or read. Simply set a break point in the setter or getter.
 
 We will also do something cool by overriding the setters in Chapter 5. This is only possible if you are consistent and write all of your code around getters and setters.
 

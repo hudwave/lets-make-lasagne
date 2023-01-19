@@ -103,12 +103,11 @@ What we do next is create a function `closureFunc` that will wrap around our ori
 
 The part that makes this work though is calling the `with` statement on the original `self` context (stored as `__this` in `scopeVars`). The `with` statement allows us to access the struct of `scopeVars` on `other` and everything on `self` directly.
 
-We also need to build up an array of arguments to pass to the original function. This can be done by using the built in variables `argument_count` and `argument`. There is a new method in the latest beta version `method_call` which can call a method variable and pass in an array of arguments. This should be released in `2023.01`.
-
+We also need to build up an array of arguments to pass to the original function. This can be done by using the built in variables `argument_count` and `argument`. There is a new method in the latest beta version `method_call` which can call a method variable and pass in an array of arguments. This should be released in `2023.1`.
 
 ### B. Static classes
 
-The behaviour of static variables has changed in version `2023.01`. For constructor functions you can now access static variables using the dot notation after the constructor name.
+The behaviour of static variables has changed in version `2023.1`. For constructor functions you can now access static variables using the dot notation after the constructor name.
 
 ##### StaticTest.gml
 ```gml
@@ -128,12 +127,21 @@ instance.test();
 StaticTest.test();
 ```
 
-The only catch is that the constructor needs to be called at least once to initialise the statics. Then the instance that is created can be thrown away and the statics are still accessible. Previously you would have needed to access the static variables through an instance but now they are essentially globally accessible through the constructor function itself.
+The only catch is that the constructor needs to be called at least once to initialise the statics. Then the instance that is created can be thrown away and the statics are still accessible.
+
+Previously you would have needed to access the static variables through an instance but now they are essentially globally accessible through the constructor function itself.
 
 This opens up some interesting possibilities.
 
 1. A namespace for groups of related functions
 2. Static 'singleton' classes
+
+If you are using an older version of Gamemaker you can still make of use these patterns, it's just the syntax won't look as nice. Do this by storing the initialising instance as a global variable and accessing the methods via `global` like so.
+
+```gml
+global.staticTest = new StaticTest();
+global.staticTest.test();
+```
 
 #### Namespace
 
@@ -149,22 +157,22 @@ function array_sort(array) {
 }
 ```
 
-This can now be replaced by a static utility class
+This can now be replaced by a utility class where each method is defined as static
 
 ```Arrays.gml
 function Array() constructor {
-	shuffle = function (array) {
+	static shuffle = function (array) {
 		// ...
 	}
 
-	sort = function (array) {
+	static sort = function (array) {
 		// ...
 	}
 }
 var instance = new Array();
 ```
 
-This can be accessed as `Array.shuffle()` or `Array.sort()`. There is no particular advantage of doing things this way but some people may prefer the syntax.
+This can be accessed as `Array.shuffle()` or `Array.sort()`. There is no particular advantage of doing things this way but some people may prefer the syntax. Feather doesn't currently auto complete all of the static variables but hopefully this will change in future versions.
 
 #### Static 'singleton' classes
 
@@ -186,7 +194,7 @@ In this regard it will behave similarly to a singleton class in that there will 
 
 As with any global object, think carefully about whether it needs to be global or not. Anywhere the global object is used you are adding in an explicit dependency. 
 
-### C. Method metadata
+### C. Method metadata (Annotations)
 
 In Gamemaker methods are also structs! You can do this:
 
@@ -203,7 +211,7 @@ func.a = "What?!";
 show_debug_message(func.a);		// Prints 'What?!'
 ```
 
-This means we can add variables or even other methods to a method. Why on earth would you want to do this? Well, it can be useful to add metadata to methods that can be read at runtime to affect how the method is used. There are equivalent features in other languages such as Java that let you annotation to a method with data.
+This means we can add variables or even other methods to a method. Why on earth would you want to do this? Well, it can be useful to add metadata to methods that can be read at runtime to affect how the method is used. There are equivalent features in other languages such as Java that let you annotate a method with data.
 
 That's quite an abstract thought but the most common use cases would be if you are writing a framework (e.g. unit test, serialisation) and need to configure how the framework will handle a method. 
 
@@ -219,7 +227,6 @@ function ArrayTest() constructor {
 ```
 
 Now we could build a `TestRunner` class that has a method `runTests` that takes an instance of a test suite e.g. `ArrayTest` above.
-
 
 ```TestRunner.gml
 function TestRunner() constructor {
@@ -247,3 +254,52 @@ function TestRunner() constructor {
 ```
 
 `runTests` will loop through all the variables on the test suite and check to see if there are any methods with the meta data `test = true`. If so it will execute the method to run the test.
+
+This metadata can only be applied to method variables or global script functions. It cannot be applied to regular variables. However if you are following the advice in [Chapter 2](/chapter-02-self-imposed-restrictions/chapter-02-self-imposed-restrictions.md) you will have getter and setter methods for them. Say you are writing a serialisation framework, you can apply any serialisation metadata to the setter, and any deserialisation metadata to the getter. 
+
+### D. Convenience methods
+
+#### `set_value(target, property, value) -> undefined`
+```gml
+/**
+ * Sets a value on the target struct or object.
+ * The is a convenience method that is useful when
+ * the caller does not know the type of the target.
+ * @param {Id.Instance, Struct} target		The object or struct to set the value on.
+ * @param {String} property					The name of the property to set the value on.
+ * @param {Any} value						The value to set.
+ */
+function set_value(target, property, value) {
+	if (is_struct(target)) {
+		target[$ property] = value;
+	}
+	else if (instance_exists(target)) {
+		variable_instance_set(target, property, value);
+	}
+}
+```
+
+#### `get_value(target, property) -> undefined`
+
+```gml
+/**
+ * Gets a value from a target struct or object.
+ * The is a convenience method that is useful when
+ * the caller does not know the type of the target.
+ * @param {Id.Instance, Struct} target		The object or struct to get the value from.
+ * @param {String} property					The name of the property to retrieve.
+ */
+function get_value(target, property) {
+	var value = undefined;
+	
+	if (is_struct(target)) {
+		value = variable_struct_get(target, property);
+	}
+	else if (instance_exists(target)) {
+		value = variable_instance_get(target, property);
+	}
+	
+	return value;
+}
+```
+
