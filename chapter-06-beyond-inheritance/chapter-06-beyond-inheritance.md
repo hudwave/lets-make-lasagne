@@ -14,7 +14,7 @@ Sharing common code and behaviours from a parent object across multiple child ob
 
 ##### pEnemy::Create
 ```gml
-attack() {
+attack = function () {
     // Do damage
 }
 ```
@@ -28,7 +28,7 @@ event_inherited();
 
 // By redefining attack it will override the
 // method defined in the parent object.
-attack() {
+attack = function () {
     // Do double damage
 }
 ```
@@ -40,7 +40,7 @@ Extending the capabilities of a parent object by adding new code and behaviours 
 ```gml
 event_inherited();
 
-specialAttack() {
+specialAttack = function () {
     // Do special damage
 }
 ```
@@ -97,7 +97,7 @@ At some point either the names of your objects will become quite abstract and sp
 
 ### Composition over inheritance
 
-Composition over inheritance is a technique favoured in object orientated programming where a class will be 'composed' of other objects to perform its functions or hold data.
+Composition over inheritance is a technique favoured in object orientated programming where a class will be 'composed' of other objects to perform its duties or hold data.
 
 In inheritance typically a child object will have an `is-a` relationship with the parent object e.g. a car (child) `is-a` vehicle (parent). Objects are related by what they are and as we saw in the previous section this is not always the best idea.
 
@@ -112,7 +112,7 @@ function Engine() constructor {
         engineSize = newEngineSize;
     }
 
-    getEngineSize = function  () {
+    getEngineSize = function () {
         return engineSize;
     }
 }
@@ -250,7 +250,7 @@ original.methodToOverride();            // Prints 'overridden'
 original.extendingMethod();             // Prints 'new behaviour'
 ```
 
-Notice that we are using a static utility class called `Mixin` to hold all of the mixin related code. This type of class is described in more detail in [Appendix B](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md).
+Notice that we are using a static utility class called `Mixin` to hold all of the mixin related code. This type of class is described in more detail in [Appendix B](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#b-static-classes).
 
 ##### Mixin.gml
 ```gml
@@ -272,7 +272,7 @@ function Mixin() constructor {
             
             set_value(target, key, value);
         }
-	}
+    }
 }
 // Instantiate statics
 var mixin = new Mixin();
@@ -302,18 +302,18 @@ To get #3 working we'll need to have a mechanism of seeing what mixins have been
 
 function Mixin() constructor {
     static apply = function(target, mixinId) {
-		// Register target as a mixin user
-		var appliedMixins = get_value(target, APPLIED_MIXINS);
-		if (appliedMixins == undefined) {
-			appliedMixins = [];
-			set_value(target, APPLIED_MIXINS, appliedMixins);
-		}
-		
-		var mixinName = script_get_name(mixinId);
-		if (!array_contains(appliedMixins, mixinName)) {
-			// Create mixin
-			var mixin = new mixinId();
-			
+        // Register target as a mixin user
+        var appliedMixins = get_value(target, APPLIED_MIXINS);
+        if (appliedMixins == undefined) {
+            appliedMixins = [];
+            set_value(target, APPLIED_MIXINS, appliedMixins);
+        }
+        
+        var mixinName = script_get_name(mixinId);
+        if (!array_contains(appliedMixins, mixinName)) {
+            // Create mixin
+            var mixin = new mixinId();
+            
             // Shallow copy properties across to target
             var keys = variable_struct_get_names(mixin);
         
@@ -327,17 +327,17 @@ function Mixin() constructor {
                 
                 set_value(target, key, value);
             }
-			
-			// Mark mixin on target
-			array_push(appliedMixins, mixinName);
-		}
-	}
+            
+            // Mark mixin on target
+            array_push(appliedMixins, mixinName);
+        }
+    }
 }
 // Instantiate statics
 var mixin = new Mixin();
 ```
 
-The additional code will store an array on the mixin target under the name `__mixins` if it does not already exist. This will store the class name of all mixins applied to the instance. The mixin name can be found by calling `script_get_name` on the mixin's constructor function.
+We will store an array on the mixin target under the name `__mixins` if it does not already exist. This will contain the class names of all mixins applied to the instance. The mixin name can be found by calling `script_get_name` on the mixin's constructor function.
 
 We can also add a mechanism to keep track all instances of a mixin that have been created. We can then use this to loop through all instances of the mixin as you might using the object's asset name.
 
@@ -349,18 +349,18 @@ function Mixin() constructor {
     static registeredInstances = {};
 
     static apply = function(target, mixinId) {
-		// Register target as a mixin user
-		var appliedMixins = get_value(target, APPLIED_MIXINS);
-		if (appliedMixins == undefined) {
-			appliedMixins = [];
-			set_value(target, APPLIED_MIXINS, appliedMixins);
-		}
-		
-		var mixinName = script_get_name(mixinId);
-		if (!array_contains(appliedMixins, mixinName)) {
-			// Create mixin
-			var mixin = new mixinId();
-			
+        // Register target as a mixin user
+        var appliedMixins = get_value(target, APPLIED_MIXINS);
+        if (appliedMixins == undefined) {
+            appliedMixins = [];
+            set_value(target, APPLIED_MIXINS, appliedMixins);
+        }
+        
+        var mixinName = script_get_name(mixinId);
+        if (!array_contains(appliedMixins, mixinName)) {
+            // Create mixin
+            var mixin = new mixinId();
+            
             // Shallow copy properties across to target
             var keys = variable_struct_get_names(mixin);
         
@@ -374,24 +374,24 @@ function Mixin() constructor {
                 
                 set_value(target, key, value);
             }
-			
-			// Mark mixin on target
-			array_push(appliedMixins, mixinName);
-			
-			// Register instance globally
-			var instances = registeredInstances[$ mixinName];
-			if (instances == undefined) {
-				instances = [];
-				registeredInstances[$ mixinName] = instances;
-			}
+            
+            // Mark mixin on target
+            array_push(appliedMixins, mixinName);
+            
+            // Register instance globally
+            var instances = registeredInstances[$ mixinName];
+            if (instances == undefined) {
+                instances = [];
+                registeredInstances[$ mixinName] = instances;
+            }
 
             if (is_struct(target)) {
                 target = weak_ref_create(instance);
             }
-			
-			array_push(instances, target);
-		}
-	}
+            
+            array_push(instances, target);
+        }
+    }
 }
 // Instantiate statics
 var mixin = new Mixin();
@@ -399,7 +399,7 @@ var mixin = new Mixin();
 
 A new struct variable `registeredInstances` has been added to the static class to keep track of the mixins. The key will be the name of the mixin class and the value is an array of all instances that have had the mixin applied to it.
 
-Now we just need to create a methods to retrieve and manage the `registeredInstances`.
+Now we just need to create a methods to retrieve/manage the `registeredInstances` and to check the types applied to specific instances.
 
 ##### Mixin.gml
 ```gml
@@ -409,24 +409,24 @@ function Mixin() constructor {
     static registeredInstances = {};
 
     static apply = function(target, mixinId) {
-		// ...
-	}
+        // ...
+    }
 
-	static is = function (target, mixinId) {
-		var targetTypes = get_value(target, APPLIED_MIXINS);
-		if (targetTypes == undefined) {
-			return false;
-		}
-		
-		var mixinName = script_get_name(mixinId);
-		return array_contains(targetTypes, mixinName);
-	}
+    static is = function (target, mixinId) {
+        var targetTypes = get_value(target, APPLIED_MIXINS);
+        if (targetTypes == undefined) {
+            return false;
+        }
+        
+        var mixinName = script_get_name(mixinId);
+        return array_contains(targetTypes, mixinName);
+    }
 
     static getAll = function (mixinId) {
-		var mixinName = script_get_name(mixinId);
-		var instances = registeredInstances[$ mixinName];
-		instances ??= [];
-		
+        var mixinName = script_get_name(mixinId);
+        var instances = registeredInstances[$ mixinName];
+        instances ??= [];
+        
         // Remove any dead weak refs
         var cleaned = [];
         for (var i = 0; i < array_length(instances); i++) {
@@ -440,9 +440,7 @@ function Mixin() constructor {
         registeredInstances[$ mixinName] = cleaned;
         
         return cleaned;
-	}
-
-    
+    }
 }
 // Instantiate statics
 var mixin = new Mixin();
@@ -450,8 +448,7 @@ var mixin = new Mixin();
 
 `Mixin.get` can be used to get a list of all active instances that have had the mixin applied. This could then be looped over to check for collisions.
 
-`Mixin.is` can be used to check whether an object or struct is of a specific mixin type. This can be used as a safety check before calling a specific method on the target or to run some specific logic if the object is the correct type e.g. destroy an object if it is of mixin type `Broken`. Note that this is making use of the `get_value` function defined in [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md).
-
+`Mixin.is` can be used to check whether an object or struct is of a specific mixin type. This can be used as a safety check before calling a specific method on the target or to run some specific logic if the object is the correct type e.g. destroy an object if it is of mixin type `Broken`. Note that this is making use of the `get_value` function defined in [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#get_valuetarget-property---undefined).
 ### When to use inheritance
 
 We still need inheritance in Gamemaker. Firstly, it can be a good tool when your hierarchy of objects is straightforward, small and well defined. If later on you feel like you are encountering issues with inheritance you can refactor to use the methods outlined above.

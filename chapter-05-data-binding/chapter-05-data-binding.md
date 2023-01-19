@@ -280,7 +280,7 @@ function closure(scopeVars, func, context = undefined) {
 }
 ```
 
-You can read more about how the closure function works in [Appendix A](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md). But for now you can trust this works so lets look at how this changes the `data_bind` code.
+You can read more about how the closure function works in [Appendix A](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#a-closures). But for now you can trust this works so lets look at how this changes the `data_bind` code.
 
 ##### DataBinding.gml::data_bind
 ```gml
