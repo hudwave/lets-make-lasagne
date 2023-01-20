@@ -31,7 +31,7 @@ The code assumes a version of Gamemaker `2023.1` or later. However nearly all of
 
     Building on the previous chapters to create a rudimentary data binding system just for fun.
 
-6. [Avoiding Inheritance](/chapter-06-beyond-inheritance/chapter-06-beyond-inheritance.md)
+6. [Beyond Inheritance](/chapter-06-beyond-inheritance/chapter-06-beyond-inheritance.md)
 
     A look at how inheritance works in Gamemaker and alternatives to use when it fails such as Composition and Mixins.
 
