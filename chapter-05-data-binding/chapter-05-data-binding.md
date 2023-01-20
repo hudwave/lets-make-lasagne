@@ -430,8 +430,4 @@ Add an `unbind(target, targetProperty, source)` function to remove the source ob
 
 Look into implementing the update pattern. If you know that this is a use case you need then you can add a signal called `update` to the target object. This can be connected to the setter on the source object. When the value needs to change, emit the update signal with the new value. This will then call the setter on the target with the new value.
 
-#### The end
-
-Thanks for reading if you made it this far. I might write more chapters if people have found this useful. If you have any comments or suggestions you can leave them in the GMC forums in this thread [here](https://forum.gamemaker.io/index.php?threads/lets-make-lasagne-a-clean-code-tutorial-series.100427/).
-
 ## [← Previous](/chapter-05-data-binding/chapter-05-data-binding.md) | [Next →](/chapter-06-beyond-inheritance/chapter-06-beyond-inheritance.md)

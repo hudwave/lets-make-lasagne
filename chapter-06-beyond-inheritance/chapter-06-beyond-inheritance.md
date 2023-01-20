@@ -33,6 +33,10 @@ attack = function () {
 }
 ```
 
+Notice that we have still inherited the original create event using `event_inherited` which will run the parent's create event first. You might think that this would only allow us to extend the parent's behaviour. In Gamemaker you have the option to override the event which does not run the parent's create event.
+
+However since we are encapsulating our functionality in methods rather than whole events we choose to inherit them. The overriding here occurs when we re-define the `attack` method. This gives us much more control over what is overridden while still being able to inherit other methods and variables.
+
 #### Extending
 Extending the capabilities of a parent object by adding new code and behaviours e.g. adding a secondary attack to a child enemy that is not present in any other enemies.
 
@@ -152,6 +156,7 @@ Instead of using composition, in Gamemaker we have an option of directly manipul
 
 This means we can override methods on an object by simply assigning a new method to the variable that stored the original method.
 
+#### DirectManipulationTest.gml
 ```gml
 function OverrideExample() constructor {
     methodToOverride = function () {
@@ -174,6 +179,7 @@ test.methodToOverride();    // Prints 'overridden'
 ```
 Note that the method needs to be bound to the object so that the `self` context refers to the object and not the creating scope. We can also extend an object by adding new methods or variables to the object.
 
+#### DirectManipulationTest.gml
 ```gml
 function ExtensionExample() constructor {
     baseMethod = function () {
@@ -435,7 +441,7 @@ function Mixin() constructor {
         for (var i = 0; i < array_length(instances); i++) {
             var instance = instances[i];
             if (object_exists(instance)) {
-                array_push(cleaned);
+                array_push(cleaned, instance);
             }
         }
         
@@ -453,15 +459,59 @@ var mixin = new Mixin();
 
 `Mixin.is` can be used to check whether an object or struct is of a specific mixin type. This can be used as a safety check before calling a specific method on the target or to run some specific logic if the object is the correct type e.g. destroy an object if it is of mixin type `Broken`. Note that this is making use of the `get_value` and `object_exists` functions defined in [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md).
 
-One last word on this implementation of mixins, we are having to manually remove any instances 
+One last word on this implementation of mixins. Since the static class sticks around the entire length of the game it is necessary to to manually remove any instances that no longer exist. For brevity in this tutorial I have chosen to check for this each time `Mixin.get` is called.
+
+Depending on your circumstances you may need to do this more of less frequently; and the best time to do it may not be on retrieval each time. It might be enough to add a `cleanUp` method that runs through all the keys of `registeredInstances` and call this whenever the room changes.
+
+##### Mixin.gml
+```gml
+#macro APPLIED_MIXINS "__mixins"
+function Mixin() constructor {
+    static registeredInstances = {};
+
+    static apply = function(target, mixinId) {
+        // ...
+    }
+
+    static is = function (target, mixinId) {
+        // ...
+    }
+
+    static getAll = function (mixinId) {
+        // ...
+    }
+
+    static cleanUp = function () {
+        var mixinNames = variable_struct_get_names(registeredInstances);
+        for (var i = 0; i < array_length(mixinNames); i++) {
+            var mixinName = mixinNames[i];
+            var instances = registeredInstances[$ mixinName];
+            
+            var cleaned = [];
+            for (var j = 0; j < array_length(instances); j++) {
+                var instance = instances[j];
+                if (object_exists(instance)) {
+                    array_push(cleaned, instance);
+                }
+            }
+            
+            registeredInstances[$ mixinName] = cleaned;
+        }
+    }
+}
+// Instantiate statics
+var mixin = new Mixin();
+```
 
 ### When to use inheritance
 
 We still need inheritance in Gamemaker. Firstly, it can be a good tool when your hierarchy of objects is straightforward, small and well defined. If later on you feel like you are encountering issues with inheritance you can refactor to use the methods outlined above.
 
-Secondly, inheritance is the only way to run collision functions over a group of objects at the same time. If you have an array of objects with unknown types (such as when using `Mixin.get`) then you need to loop over them and perform the check on each object. In theory the performance should be the same but I don't know if gamemaker makes any optimisations under the hood 🫠.
+Secondly, inheritance is the only way to run collision functions over a group of objects at the same time. Especially using the polymorphic capabilities of inheritance.
 
-What I would say is that you can mix and match to make use of inheritance and the other techniques in the chapter at the same time. It doesn't need to be one or the other. Even mixins can inherit from other mixins using constructor inheritance! Let the problem you are working on guide you. If you encounter resistance using inheritance look for other options.
+If you have an array of objects with unknown types (such as when using `Mixin.get`) then you need to loop over them and perform the check on each instance. In theory the performance should be the same but I don't know if gamemaker makes any optimisations under the hood 🫠.
+
+What I would say is that you can mix and match to make use of inheritance and the other techniques in this chapter at the same time. It doesn't need to be one or the other. Even mixins can inherit from other mixins using constructor inheritance! Let the problem you are working on guide you. If you encounter resistance using inheritance look for other options.
 
 ## [← Previous](/chapter-05-data-binding/chapter-05-data-binding.md)
 

@@ -68,7 +68,7 @@ function Mixin() constructor {
 		for (var i = 0; i < array_length(instances); i++) {
 			var instance = instances[i];
 			if (object_exists(instance)) {
-				array_push(cleaned);
+				array_push(cleaned, instance);
 			}
 		}
 		
@@ -76,6 +76,24 @@ function Mixin() constructor {
 		registeredInstances[$ mixinName] = cleaned;
 		
 		return cleaned;
+	}
+	
+	static cleanUp = function () {
+		var mixinNames = variable_struct_get_names(registeredInstances);
+		for (var i = 0; i < array_length(mixinNames); i++) {
+			var mixinName = mixinNames[i];
+			var instances = registeredInstances[$ mixinName];
+			
+			var cleaned = [];
+			for (var j = 0; j < array_length(instances); j++) {
+				var instance = instances[j];
+				if (object_exists(instance)) {
+					array_push(cleaned, instance);
+				}
+			}
+			
+			registeredInstances[$ mixinName] = cleaned;
+		}
 	}
 }
 // Instantiate statics

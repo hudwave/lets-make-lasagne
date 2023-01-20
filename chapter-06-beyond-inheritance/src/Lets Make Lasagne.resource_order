@@ -1,6 +1,10 @@
 {
   "ResourceOrderSettings": [
+    {"name":"oInheritanceTest","path":"objects/oInheritanceTest/oInheritanceTest.yy","order":3,},
+    {"name":"oMixinTest","path":"objects/oMixinTest/oMixinTest.yy","order":1,},
     {"name":"ObjectFunctions","path":"scripts/ObjectFunctions/ObjectFunctions.yy","order":1,},
+    {"name":"oStrongEnemy","path":"objects/oStrongEnemy/oStrongEnemy.yy","order":1,},
+    {"name":"oSpecialEnemy","path":"objects/oSpecialEnemy/oSpecialEnemy.yy","order":2,},
     {"name":"rTest","path":"rooms/rTest/rTest.yy","order":1,},
   ],
   "FolderOrderSettings": [
@@ -8,5 +12,8 @@
     {"name":"Rooms","path":"folders/Rooms.yy","order":10,},
     {"name":"Scripts","path":"folders/Scripts.yy","order":5,},
     {"name":"Tests","path":"folders/Tests.yy","order":11,},
+    {"name":"Mixin Test","path":"folders/Tests/Mixin Test.yy","order":1,},
+    {"name":"Inheritance Test","path":"folders/Tests/Inheritance Test.yy","order":2,},
+    {"name":"Direct Manipulation Test","path":"folders/Tests/Direct Manipulation Test.yy","order":3,},
   ],
 }

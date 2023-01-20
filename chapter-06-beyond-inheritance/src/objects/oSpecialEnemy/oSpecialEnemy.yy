@@ -1,14 +1,17 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "oMixinTest",
+  "name": "oSpecialEnemy",
   "spriteId": null,
   "solid": false,
   "visible": true,
   "managed": true,
   "spriteMaskId": null,
   "persistent": false,
-  "parentObjectId": null,
+  "parentObjectId": {
+    "name": "pEnemy",
+    "path": "objects/pEnemy/pEnemy.yy",
+  },
   "physicsObject": false,
   "physicsSensor": false,
   "physicsShape": 1,
@@ -27,7 +30,7 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Mixin Test",
-    "path": "folders/Tests/Mixin Test.yy",
+    "name": "Inheritance Test",
+    "path": "folders/Tests/Inheritance Test.yy",
   },
 }

@@ -1,7 +1,7 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "oMixinTest",
+  "name": "oInheritanceTest",
   "spriteId": null,
   "solid": false,
   "visible": true,
@@ -27,7 +27,7 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Mixin Test",
-    "path": "folders/Tests/Mixin Test.yy",
+    "name": "Inheritance Test",
+    "path": "folders/Tests/Inheritance Test.yy",
   },
 }
