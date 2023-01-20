@@ -1,0 +1,12 @@
+{
+  "ResourceOrderSettings": [
+    {"name":"ObjectFunctions","path":"scripts/ObjectFunctions/ObjectFunctions.yy","order":1,},
+    {"name":"rTest","path":"rooms/rTest/rTest.yy","order":1,},
+  ],
+  "FolderOrderSettings": [
+    {"name":"Objects","path":"folders/Objects.yy","order":9,},
+    {"name":"Rooms","path":"folders/Rooms.yy","order":10,},
+    {"name":"Scripts","path":"folders/Scripts.yy","order":5,},
+    {"name":"Tests","path":"folders/Tests.yy","order":11,},
+  ],
+}

@@ -259,6 +259,8 @@ This metadata can only be applied to method variables or global script functions
 
 ### D. Convenience methods
 
+Below are a reference for the convenience functions used in places throughout the text.
+
 #### `set_value(target, property, value) -> undefined`
 ```gml
 /**
@@ -300,6 +302,30 @@ function get_value(target, property) {
 	}
 	
 	return value;
+}
+```
+
+#### `object_exists(instance) -> undefined`
+
+```gml
+/**
+ * Checks to see if the instance or struct exists
+ * @param {Id.Instance, Struct} instance	The object to check existence of.
+ */
+function object_exists(instance) {
+	if (is_struct(instance)) {
+		if (instanceof(instance) == "weakref") {
+			return weak_ref_alive(instance);
+		}
+		else {
+			return instance != undefined;
+		}
+	}
+	else if (typeof(instance) == "ref") {
+		return instance_exists(instance);
+	}
+
+	return false;
 }
 ```
 

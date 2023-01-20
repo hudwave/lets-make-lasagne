@@ -213,10 +213,10 @@ We are going to create a function `Mixin.apply` which will apply a mixin to an o
 ##### MixinTest.gml
 ```gml
 // A test struct class
-function OriginalClass() : constructor {
+function OriginalClass() constructor {
     valueToOverride = 1;
     
-    valueOverrideExample = function {
+    valueOverrideExample = function () {
          show_debug_message(value);
     }
 
@@ -226,7 +226,7 @@ function OriginalClass() : constructor {
 }
 
 // A mixin
-function MixinTest() : constructor {
+function MixinTest() constructor {
     valueToOverride = 7;
 
     methodToOverride = function () {
@@ -237,7 +237,10 @@ function MixinTest() : constructor {
         show_debug_message("new behaviour");
     }
 }
+```
 
+##### oMixinTest::Create
+```gml
 var original = new OriginalClass();
 original.valueOverrideExample();        // Prints '1'
 original.methodToOverride();            // Prints 'original'
@@ -264,7 +267,7 @@ function Mixin() constructor {
 	
         for (var i = 0; i < array_length(keys); i++) {
             var key = keys[i];
-            var value = values[$ key];
+            var value = mixin[$ key];
             
             if (is_method(value)) {
                 value = method(target, value);
@@ -319,7 +322,7 @@ function Mixin() constructor {
         
             for (var i = 0; i < array_length(keys); i++) {
                 var key = keys[i];
-                var value = values[$ key];
+                var value = mixin[$ key];
                 
                 if (is_method(value)) {
                     value = method(target, value);
@@ -366,7 +369,7 @@ function Mixin() constructor {
         
             for (var i = 0; i < array_length(keys); i++) {
                 var key = keys[i];
-                var value = values[$ key];
+                var value = mixin[$ key];
                 
                 if (is_method(value)) {
                     value = method(target, value);
@@ -386,7 +389,7 @@ function Mixin() constructor {
             }
 
             if (is_struct(target)) {
-                target = weak_ref_create(instance);
+                target = weak_ref_create(target);
             }
             
             array_push(instances, target);
@@ -448,14 +451,17 @@ var mixin = new Mixin();
 
 `Mixin.get` can be used to get a list of all active instances that have had the mixin applied. This could then be looped over to check for collisions.
 
-`Mixin.is` can be used to check whether an object or struct is of a specific mixin type. This can be used as a safety check before calling a specific method on the target or to run some specific logic if the object is the correct type e.g. destroy an object if it is of mixin type `Broken`. Note that this is making use of the `get_value` function defined in [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#get_valuetarget-property---undefined).
+`Mixin.is` can be used to check whether an object or struct is of a specific mixin type. This can be used as a safety check before calling a specific method on the target or to run some specific logic if the object is the correct type e.g. destroy an object if it is of mixin type `Broken`. Note that this is making use of the `get_value` and `object_exists` functions defined in [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md).
+
+One last word on this implementation of mixins, we are having to manually remove any instances 
+
 ### When to use inheritance
 
 We still need inheritance in Gamemaker. Firstly, it can be a good tool when your hierarchy of objects is straightforward, small and well defined. If later on you feel like you are encountering issues with inheritance you can refactor to use the methods outlined above.
 
-Secondly, inheritance is the only way to run collision functions over a group of objects at the same time. If you have an array of objects such as then you need to loop over them and perform the check on each object. In theory the performance should be the same but I don't know if gamemaker makes any optimisations under the hood 🫠.
+Secondly, inheritance is the only way to run collision functions over a group of objects at the same time. If you have an array of objects with unknown types (such as when using `Mixin.get`) then you need to loop over them and perform the check on each object. In theory the performance should be the same but I don't know if gamemaker makes any optimisations under the hood 🫠.
 
-What I would say is that you can make use of inheritance and the other techniques in the chapter at the same time. It doesn't need to be one or the other. Even mixins can inherit from other mixins using constructor inheritance! Let the problem you are working on guide you. If you encounter resistance using inheritance look for other options.
+What I would say is that you can mix and match to make use of inheritance and the other techniques in the chapter at the same time. It doesn't need to be one or the other. Even mixins can inherit from other mixins using constructor inheritance! Let the problem you are working on guide you. If you encounter resistance using inheritance look for other options.
 
 ## [← Previous](/chapter-05-data-binding/chapter-05-data-binding.md)
 

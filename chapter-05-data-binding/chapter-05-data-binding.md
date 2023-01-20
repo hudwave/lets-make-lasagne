@@ -1,6 +1,6 @@
 # Lets make lasagne
 
-# A lesson in loose coupling: How to throw away the spaghetti code
+# How to throw away the spaghetti code
 
 
 ## Chapter 5: Data binding

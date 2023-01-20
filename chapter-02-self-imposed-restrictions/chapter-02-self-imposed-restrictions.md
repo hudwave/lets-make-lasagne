@@ -1,6 +1,6 @@
 # Lets make lasagne
 
-# A lesson in loose coupling: How to throw away the spaghetti code
+# How to throw away the spaghetti code
 
 
 ## Chapter 2: Self imposed coding restrictions and good practices

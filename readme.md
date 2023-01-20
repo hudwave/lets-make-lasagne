@@ -1,14 +1,14 @@
 # Lets Make Lasagne
 
-# A lesson in loose coupling: How to throw away the spaghetti code
+# How to throw away the spaghetti code
 
 Welcome! This tutorial is aimed at intermediate Gamemaker programmers who know there is something clunky or not quite right with their code but don't know how to take it to the next level.
 
-The main focus of this series is to look at ways write cleaner more maintainable code. So it may also be beneficial to more experienced programmers who are only familiar with the basics of Gamemaker.
+The main focus of this series is to look at ways write cleaner more maintainable code. So it may also be beneficial to more experienced programmers who are only familiar with the basics of Gamemaker. I would recommend getting to grips with how Gamemaker works first though!
 
 It covers some concepts that hobbyist developers would not normally be exposed to unless they worked as a professional programmer (or actively sought them out). All of the information contained in the tutorials is available elsewhere but it can be overwhelming to know where to start or how to apply it. These tutorials will act as a gentle bridge into the world of programming principles and design patterns; and how they can be applied to a simple Gamemaker scenario.
 
-The code assumes a version of Gamemaker `2023.1` or later. However nearly all of the code and concepts are applicable to earlier versions. There are currently 6 chapters but I may add more over time.
+The code assumes a version of Gamemaker `2023.1` or later. However nearly all of the code and concepts are applicable to earlier versions with only minor changes required. There are currently 6 chapters but I may add more over time.
 
 ## Table of contents
 1. [Introduction](/chapter-01-introduction/chapter-01-introduction.md)
