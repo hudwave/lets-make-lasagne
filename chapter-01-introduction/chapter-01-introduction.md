@@ -8,11 +8,11 @@
 
 ### Introduction
 
-Gamemaker is great for rapidly prototyping stuff[^1]. You have complete global access to absolutely everything. This can save time but can also create a huge tangled mess if you're not careful.
+GameMaker is great for rapidly prototyping stuff[^1]. You have complete global access to absolutely everything. This can save time but can also create a huge tangled mess if you're not careful.
 
 We're going to closely examine one scenario to show why global access can be bad and how we can write nice clean code instead. The scenario is deliberately simple so that it's easy to follow. There are accompanying source files for each chapter. The code reflects how the project should look at the end of the chapter. This chapter doesn't contain any changes so if you want to follow along and write the code yourself, take the project from the chapter 1 folder and add to it from there.
 
-This tutorial is aimed at intermediate programmers who know there is something clunky or not quite right with their code but don't know how to take it to the next level.
+This tutorial is aimed at intermediate GameMaker programmers who know there is something clunky or not quite right with their code but don't know how to take it to the next level.
 
 It will introduce some concepts that help solve certain problems you might face when designing systems in your game. These are only tools however, learning when and where to apply them and when to ignore them will come with experience. And it IS valid to ignore them when it makes sense to do so. We need to learn what these tools are though first so lets begin!
 
@@ -72,7 +72,7 @@ Both of these solutions work but they are bad. It's time consuming to setup test
 
 What we need to do is untangle the spaghetti, in programming terms this is called decoupling. Instead of spaghetti we are aiming for nice separated lasagne sheets, with a delicious loose coupling layer of bolognese sauce between[^2].
 
-Strong coupling of dependencies can lead to tangled spaghetti code. We want to be in a position where making a change to one object doesn't cause massive ripples throughout the codebase. In the simplest terms, in Gamemaker a dependency is when an object needs to call another external object to complete its task. The fewer dependencies you rely on the less likely your code will break when changes are made.
+Strong coupling of dependencies can lead to tangled spaghetti code. We want to be in a position where making a change to one object doesn't cause massive ripples throughout the codebase. In the simplest terms, in GameMaker a dependency is when an object needs to call another external object to complete its task. The fewer dependencies you rely on the less likely your code will break when changes are made.
 
 Now, its impossible to write code without any dependencies at all but there are strategies to minimise their coupling. These will be discussed in future chapters.
 

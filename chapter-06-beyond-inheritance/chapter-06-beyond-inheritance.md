@@ -7,7 +7,7 @@
 
 This chapter moves on from the theme of loose coupling in the previous chapters. Instead it will focus on alternatives to using inheritance and when and where to use them.
 
-Both objects and constructor functions can make use of inheritance in Gamemaker[^1] and there are several excellent uses:
+Both objects and constructor functions can make use of inheritance in GameMaker[^1] and there are several excellent uses:
 
 #### Code re-use
 Sharing common code and behaviours from a parent object across multiple child objects. This prevents duplication of code e.g. adding a basic attack method to the parent enemy object `pEnemy` which will then be present in all child enemies.
@@ -33,7 +33,7 @@ attack = function () {
 }
 ```
 
-Notice that we have still inherited the original create event using `event_inherited` which will run the parent's create event first. You might think that this would only allow us to extend the parent's behaviour. In Gamemaker you have the option to override the event which does not run the parent's create event.
+Notice that we have still inherited the original create event using `event_inherited` which will run the parent's create event first. You might think that this would only allow us to extend the parent's behaviour. In GameMaker you have the option to override the event which does not run the parent's create event.
 
 However since we are encapsulating our functionality in methods rather than whole events we choose to inherit them. The overriding here occurs when we re-define the `attack` method. This gives us much more control over what is overridden while still being able to inherit other methods and variables.
 
@@ -52,15 +52,15 @@ specialAttack = function () {
 #### Polymorphic behaviour
 Ability to use different child object types in places where a parent object type is specified (this is called polymorphism) e.g. using the parent object `pEnemy` in collision functions will also check for all child enemy objects because a child enemy is a  `pEnemy`.
 
-Note that for the most part you won't need to make use of polymorphism. This is because Gamemaker is dynamically typed i.e. it does not enforce a specific type for method calls. You can pass in any object you like to a method and as long as it has the the correct properties the method will not crash. This is called duck typing.
+Note that for the most part you won't need to make use of polymorphism. This is because GameMaker is dynamically typed i.e. it does not enforce a specific type for method calls. You can pass in any object you like to a method and as long as it has the the correct properties the method will not crash. This is called duck typing.
 
-These are all pretty useful features of inheritance and for the most part you will not encounter any problems using them in Gamemaker.
+These are all pretty useful features of inheritance and for the most part you will not encounter any problems using them in GameMaker.
 
 Inheritance does have its limitations though so it's important to know what these are and what to do when you brush up against them.
 
 ### The problem
 
-Inheritance has a bad reputation in the object orientated world. However since Gamemaker is not fully object orientated and is not strongly typed, a lot of the reasons for avoiding inheritance are not strictly applicable. We can also manoeuvre around inheritance in other ways that do not depend on coding to an interface as you would in an object orientated language.
+Inheritance has a bad reputation in the object orientated world. However since GameMaker is not fully object orientated and is not strongly typed, a lot of the reasons for avoiding inheritance are not strictly applicable. We can also manoeuvre around inheritance in other ways that do not depend on coding to an interface as you would in an object orientated language.
 
 One problem that you may encounter however is when inheritance cannot adequately describe your hierarchy of objects. This usually happens when there is some logic or feature that is only applicable to some of the child objects even though they share other common behaviour.
 
@@ -149,7 +149,7 @@ Extension is the only point which is not addressed by composition. We'll look at
 
 ### Direct object manipulation
 
-Instead of using composition, in Gamemaker we have an option of directly manipulating an object or struct that is not possible in many strongly typed, object orientated languages. The features in question are:
+Instead of using composition, in GameMaker we have an option of directly manipulating an object or struct that is not possible in many strongly typed, object orientated languages. The features in question are:
 
 1. New properties (variables) can be added to an object or struct at runtime. 
 2. Functions are first class allowing them to be assigned to variables.
@@ -212,7 +212,7 @@ We need to formalise which properties will be extended or overridden so they can
 
 Enter mixins, a way of re-using code between classes. You can think of a mixin as a sort of small self contained class that contains methods and variables. When a mixin is applied to an object all of its properties are copied over to the object, the properties have been 'mixed-in' or included rather than inherited.
 
-In Gamemaker we will use a constructor function to define a mixin. There doesn't need to be anything special about the constructor to be a mixin, just be aware that we are not copying over any static variables.
+In GameMaker we will use a constructor function to define a mixin. There doesn't need to be anything special about the constructor to be a mixin, just be aware that we are not copying over any static variables.
 
 We are going to create a function `Mixin.apply` which will apply a mixin to an object or struct. It does this by creating an instance of the mixin using the constructor function. It will then copy over all of the properties to the target object thus applying the mixin.
 
@@ -505,7 +505,7 @@ var mixin = new Mixin();
 
 ### When to use inheritance
 
-We still need inheritance in Gamemaker. Firstly, it can be a good tool when your hierarchy of objects is straightforward, small and well defined. If later on you feel like you are encountering issues with inheritance you can refactor to use the methods outlined above.
+We still need inheritance in GameMaker. Firstly, it can be a good tool when your hierarchy of objects is straightforward, small and well defined. If later on you feel like you are encountering issues with inheritance you can refactor to use the methods outlined above.
 
 Secondly, inheritance is the only way to run collision functions over a group of objects at the same time. Especially using the polymorphic capabilities of inheritance.
 

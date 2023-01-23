@@ -30,7 +30,7 @@ The injected object can also be easily changed at runtime (if using setters) to 
 
 Dependencies do need to be created somewhere though. Usually dependencies will be created nearer the top of the hierarchy of objects such as in controller objects.
 
-In Gamemaker we have the option to create objects via code or by placing them directly in the room editor. If an object requires use of another object that has been created in the room, then the line of code that finds the object should be considered equivalent to a statement that creates an object i.e. it is a dependency. This is another self imposed coding restriction that we will abide by. We should find dependencies in the controller and inject them into objects that need them.
+In GameMaker we have the option to create objects via code or by placing them directly in the room editor. If an object requires use of another object that has been created in the room, then the line of code that finds the object should be considered equivalent to a statement that creates an object i.e. it is a dependency. This is another self imposed coding restriction that we will abide by. We should find dependencies in the controller and inject them into objects that need them.
 
 Just a quick reminder that you don't have to follow the principles outlined in this tutorial to the letter every time. There may be situations where you feel it's not worth the effort to inject the dependency, perhaps the dependency won't ever change and is only ever relevant to the current object. Just be sure to refactor if it ever does become a problem.
 

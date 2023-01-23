@@ -201,7 +201,7 @@ The first problem is that the method variable `sourceSetter` will be bound to th
 source[$ sourceSetterName] = method(source, sourceSetter);
 ```
 
-The second problem is a little bit trickier to solve. The code above is written assuming that method variables in Gamemaker form a closure around the local variables in the current scope. This is a concept from functional programming but in brief it means that a function can make use any local variables that were previously defined in the same scope as the function itself was. Below is an example in Javascript.
+The second problem is a little bit trickier to solve. The code above is written assuming that method variables in GameMaker form a closure around the local variables in the current scope. This is a concept from functional programming but in brief it means that a function can make use any local variables that were previously defined in the same scope as the function itself was. Below is an example in Javascript.
 
 ```javascript
 var a = "Hello";
@@ -214,13 +214,13 @@ var c = combine(" World!");
 // c: "Hello World!"
 ```
 
-The function `combine` here is capturing the value of `a` from the local scope so that it can be used inside the function itself. This doesn't happen in Gamemaker and instead of `c` being equal to "Hello World!" we will instead get a crash saying that `a` is not defined.
+The function `combine` here is capturing the value of `a` from the local scope so that it can be used inside the function itself. This doesn't happen in GameMaker and instead of `c` being equal to "Hello World!" we will instead get a crash saying that `a` is not defined.
 
 So how can we solve this and get the values of the source property name and the signal into the setter function?
 
 ### Emulating a closure
 
-It's possible to emulate a closure in Gamemaker but we need to make use of our old friend, self imposed coding restrictions.
+It's possible to emulate a closure in GameMaker but we need to make use of our old friend, self imposed coding restrictions.
 
 First we need to create a struct that will contain all the variables we want to capture from the current scope.
 

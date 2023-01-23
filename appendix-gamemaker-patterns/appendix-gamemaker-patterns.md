@@ -3,11 +3,11 @@
 # How to throw away the spaghetti code
 
 
-## Appendix - Gamemaker patterns and useful functions
+## Appendix - GameMaker patterns and useful functions
 
 ### A. Closures
 
-Gamemaker does not natively support closures. This is a concept from functional programming, but in brief it means that a function can make use any local variables that were previously defined in the same scope as the function itself was. Below is an example in Javascript.
+GameMaker does not natively support closures. This is a concept from functional programming, but in brief it means that a function can make use any local variables that were previously defined in the same scope as the function itself was. Below is an example in Javascript.
 
 ```javascript
 var a = "Hello";
@@ -20,13 +20,13 @@ var c = combine(" World!");
 // c: "Hello World!"
 ```
 
-The function `combine` here is capturing the value of `a` from the local scope so that it can be used inside the function itself. This doesn't happen in Gamemaker and instead of `c` being equal to "Hello World!" we will instead get a crash saying that `a` is not defined.
+The function `combine` here is capturing the value of `a` from the local scope so that it can be used inside the function itself. This doesn't happen in GameMaker and instead of `c` being equal to "Hello World!" we will instead get a crash saying that `a` is not defined.
 
 So how can we solve this?
 
 #### Emulating a closure
 
-It's possible to emulate a closure in Gamemaker but it requires some tricky context switching logic and a good understanding of how method variables and scopes work.
+It's possible to emulate a closure in GameMaker but it requires some tricky context switching logic and a good understanding of how method variables and scopes work.
 
 The example below shows how we will create a closure function. The closure is able to access both instance scoped variables (directly or using `self`), and any captured variables via `other`.
 
@@ -136,7 +136,7 @@ This opens up some interesting possibilities.
 1. A namespace for groups of related functions
 2. Static 'singleton' classes
 
-If you are using an older version of Gamemaker you can still make of use these patterns, it's just the syntax won't look as nice. Do this by storing the initialising instance as a global variable and accessing the methods via `global` like so.
+If you are using an older version of GameMaker you can still make of use these patterns, it's just the syntax won't look as nice. Do this by storing the initialising instance as a global variable and accessing the methods via `global` like so.
 
 ```gml
 global.staticTest = new StaticTest();
@@ -196,7 +196,7 @@ As with any global object, think carefully about whether it needs to be global o
 
 ### C. Method metadata (Annotations)
 
-In Gamemaker methods are also structs! You can do this:
+In GameMaker methods are also structs! You can do this:
 
 ```gml
 // Define a method
@@ -261,7 +261,51 @@ This metadata can only be applied to method variables or global script functions
 
 Below are a reference for the convenience functions used in places throughout the text.
 
-#### `set_value(target, property, value) -> undefined`
+#### `for_objects(objectId: Asset.GMObject, callback: Function, [argument: Any]) -> undefined`
+```gml
+/**
+ * Applies a callback function to every instance of the provided object asset.
+ * This method is a wrapper around the with statement that maintains the executing
+ * scope. The callback function should have at least 1 parameter which will be 
+ * the current instance in the loop. Returning true from the callback function is 
+ * equivalent to using the break statement in a regular loop. Returning nothing, undefined
+ * or false is equivalent to a continue statement. This will happen naturally at the end of the
+ * callback even if no return statement is present.
+ * Additional arguments passed to the for_objects
+ * method will be forwarded to the callback function. This can be used to pass local
+ * variables to the callback function. 
+ * @param {Asset.GMObject} objectId		The object asset name to loop over.
+ * @param {Function} callback			The callback function to run for each instance.
+ * @param {Any} [argument]				Optional arguments to pass to the callback function.
+ */
+function for_objects(objectId, callback) {
+	callback = method(self, callback);
+	
+	// Minor optimisation for no optional arguments
+	if (argument_count == 2) {
+		with (objectId) {
+	        callback(self);
+	    }
+	}
+	else {
+		var args = array_create(argument_count - 1);
+		for (var i = 2; i < argument_count; i++) {
+			args[i - 1] =  argument[i];
+		}
+	
+		with (objectId) {
+			args[0] = self;
+			var breakOut = method_call(callback, args);
+			
+			if (breakOut) {
+				break;
+			}
+		}
+	}
+}
+```
+
+#### `set_value(target: Id.Instance OR Struct, property: String) -> undefined`
 ```gml
 /**
  * Sets a value on the target struct or object.
@@ -281,7 +325,7 @@ function set_value(target, property, value) {
 }
 ```
 
-#### `get_value(target, property) -> undefined`
+#### `get_value(target: Id.Instance OR Struct, property: String) -> undefined`
 
 ```gml
 /**
@@ -329,3 +373,51 @@ function object_exists(instance) {
 }
 ```
 
+### E. Fluent style API
+
+If you have an object that has a lot of configurable properties then you might create it and then configure it by writing multiple statements one after the other like so.
+
+```gml
+var titleAnimation = new Tween(titleElement);
+titleAnimation.repeat = false;
+titleAnimation.persistent = false;
+titleAnimation.duration = 90;
+titleAnimation.addProperty("xScale", TWEEN_CURVE_POP);
+titleAnimation.addProperty("yScale", TWEEN_CURVE_POP);
+titleAnimation.after(function () {
+	titleElement.destroy();
+});
+
+titleAnimation.play();
+```
+
+It's possible to streamline this by using a Fluent style API. This will allow you to configure an object by chain methods together in a single statement. It might look something like this.
+
+```gml
+var titleAnimation = new Tween(titleElement)
+	.setRepeat(false)
+	.setPersistent(false)
+	.setDuration(90)
+	.addProperty("xScale", TWEEN_CURVE_POP)
+	.addProperty("yScale", TWEEN_CURVE_POP)
+	.after(function () {
+		titleElement.destroy();
+	});
+```
+
+The way to achieve this is to return `self` from the setter methods and any other method that is required to configure the object.
+
+```gml
+function Tween() constructor {
+	repeat = false;
+
+	setRepeat = function (newRepeat) {
+		repeat = newRepeat;
+		return self;
+	}
+}
+```
+
+The chain is processed from left to right, or top to bottom depending on how you're looking at it. The constructor function returns an instance and then we use the dot notation to access a method on it. That method returns itself, so we have the same instance we originally made and we can go again and select another method.
+
+This is mostly a stylistic choice but it does communicate which 
