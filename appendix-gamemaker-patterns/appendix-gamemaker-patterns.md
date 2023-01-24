@@ -391,7 +391,7 @@ titleAnimation.after(function () {
 titleAnimation.play();
 ```
 
-It's possible to streamline this by using a Fluent style API. This will allow you to configure an object by chain methods together in a single statement. It might look something like this.
+It's possible to streamline this by using a Fluent style API. This will allow you to configure an object by chaining methods together in a single statement. It might look something like this.
 
 ```gml
 var titleAnimation = new Tween(titleElement)

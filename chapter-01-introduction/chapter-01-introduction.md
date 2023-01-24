@@ -64,6 +64,7 @@ To get the test to work we also need to setup the game controller  (which may ha
 ##### oPlayer::Step
 ```gml
 if (instance_exists(oGame)) {
+	// Increase the coin total
 	oGame.coins++;
 }
 ```

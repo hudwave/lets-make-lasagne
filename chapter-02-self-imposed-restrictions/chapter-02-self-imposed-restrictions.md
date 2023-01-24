@@ -8,17 +8,19 @@
 
 Before we talk about ways to minimise coupling it's important look at some other aspects of GameMaker that could contribute to code problems. Until recently, GameMaker's programming language (GML) behaved in a mostly imperative fashion but had a lot of limitations e.g. each script file is a single function. The language is designed around this paradigm (scripts execute in the calling object's scope, `other` keyword, `with` statement). Due to the limitations, I'm genuinely impressed that people managed to create such amazing and complicated games before! I dread to think how difficult it would have been to read, refactor, maintain and debug such a large codebase.
 
-Luckily, we now have first class functions and lightweight objects (structs) which open up a whole world of possibilities and much cleaner code. GML has become a sort of hybrid imperative, functional and part object orientated language (it's still missing some defining features of each paradigm though). All these options in GML gives us the freedom to write code in many ways, but this means we can also do a lot of stupid things. Therefore we need to be disciplined and impose some restrictions on ourselves so that we don't end up writing bad code.
+Luckily, we now have first class functions and lightweight objects (structs) which open up a whole world of possibilities and much cleaner code. GML has become a sort of hybrid imperative, functional and part object orientated language (it's still missing some defining features of each paradigm though). All these options in GML gives us the freedom to write code in many ways, but this also gives us the freedom to do stupid things. Therefore we need to be disciplined and impose some restrictions on ourselves so that we don't end up writing bad code.
 
 Below are some rules that I adhere to when writing GML. This is just my own opinion and it works for me. There is no right or wrong way to make a game in GameMaker so go with what works for you. However, you might find that by sticking to these rules, you'll end up naturally writing cleaner code.
 
 ### Direct property access
 
-GameMaker allows us to directly access the properties (instance variables and methods) of an object from a second object and make changes to them. If you're careful and working solo this might be ok; but if you are working in a team then it is important to know which variables you can change without causing something obscure to fail.
+GameMaker allows us to directly access the properties (instance variables and methods) of an object from a second object and make changes to them. If you're careful and working solo this might be ok; but if you are working in a team then it is important to know which variables you can change on some object without causing something obscure to fail.
+
+A private variable is a variable that you do not want to be modified by an external object. Often they are crucial to the inner workings of an object and if an outside object changes it incorrectly the object can stop working.
 
 There is no language concept of private variables in GML to prevent access to them. So we need to impose this restriction on ourselves.
 
-Some people like to prefix their private variables with an underscore like `_privateVariable`. I generally do not use an underscore for private variables, only for private methods. Instead for variables I will create getter and setter methods.
+Some people like to prefix their private variables with an underscore to differentiate them like `_privateVariable`. I generally do not use an underscore for private variables, only for private methods. Instead for variables I will create getter and setter methods.
 
 ##### getter method 
 ```gml
@@ -36,22 +38,66 @@ setCoins = function (newCoins) {
 
 This has a number of advantages over direct access:
 1. If a getter does not exist then you cannot read the variable. If a setter does not exist then you cannot change the value of the variable. This communicates clearly the level of access allowed to anyone reading the code.
-2. You can add additional code to the setter to do validation of the new value.
-3. You can perform perform some additional side effect upon getting or setting the value.
-4. The getter value does not need to be calculated until it is actually needed. You can check to see if the value is `undefined` when the getter is called and calculate it if required. This is called lazy instantiation. This might be useful if the calculation of a value is particularly costly but might never be needed.
-5. Getters and setters can be used as callback functions. This has so many potential uses. You can update or retrieve a value using the callback e.g. when an animation has ended get the current position.
-6. It is now trivial to debug when a value is set or read. Simply set a break point in the setter or getter.
-7. Can use fluent style setters to configure objects. See [Appendix E](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#d-fluent-style-api) for more details.
+2. You can add additional code to the setter to do validation of the new value to ensure it will not break the object.
+    ```gml
+	maxHealth = 50;
+	health = maxHealth;
 
-We will also do something cool by overriding the setters in Chapter 5. This is only possible if you are consistent and write all of your code around getters and setters.
+	setHealth = function (newHealth) {
+		if (newHealth > maxHealth) {
+			newHealth = maxHealth;
+		}
+		health = newHealth;
+	}
+	```
+3. You can create a 'computed' getter that performs some calculation each time it is accessed. This is useful if you have a value that changes often and needs to be up to date when accessed. 
+    ```gml
+	queue = [6, 3, 1, 5];
+
+	getLast = function () {
+		return queue[array_length(queue) - 1];
+	}
+	```
+4. You can perform perform some additional side effect upon getting or setting the value e.g. logging something or checking to see if some threshold has been passed.
+    ```gml
+		potionCount = 4;
+		potion = new Potion();
+
+		getPotion() {
+			if (potionCount > 0) {
+				potionCount--;
+				return potion;
+			}
+		}
+	```
+5. The getter value does not need to be calculated until it is actually needed. You can check to see if the value is `undefined` when the getter is called and calculate it if required. This is called lazy instantiation. This might be useful if the calculation of a value is particularly costly but might never be needed.
+    ```gml
+	largeBuffer = undefined;
+
+	getLargeBuffer() {
+		if (largeBuffer == undefined) {
+			largeBuffer = buildLargeBuffer();
+		}
+
+		return largeBuffer;
+	}
+	```
+6. Getters and setters can be used as callback functions. This has so many potential uses. You can update or retrieve a value using the callback. 
+7. It is now trivial to debug when a value is set or read. Simply set a break point in the setter or getter.
+8. You can use fluent style setters to configure objects. See [Appendix E](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#e-fluent-style-api) for more details.
+9. Autocomplete can be used to get a nice filtered list of all properties you can read or modify. By typing `object.set` or `object.get` you will see a filtered list of just the setters or getters on `object`. If you use direct property access you will also see loads of other variables and methods that may not be relevant.
+10. Getters and setters can be overridden to add new behaviour. We will use this fact in Chapter 5 to create a data binding system.
 
 The disadvantages are:
 1. You need to write more code and that takes effort, I sympathise 😩
-2. It creates up to two functions in memory for each instance variable (This is negligible though. Stop worrying about performance and write good code first!)
+2. It takes slightly longer to write `.getVariable()` than just `.variable`
+3. It creates up to two functions in memory for each instance variable (This is negligible though. Stop worrying about performance and prioritise code first!)
 
-Using getters and setters still doesn't prevent us from accessing the properties directly so we need a bit of self control to make sure we stick to this method and actually write the getters/setters.
+Using getters and setters still doesn't prevent us from accessing the properties directly so we need a bit of self control to make sure we stick to this method and actually write/use the getters/setters.
 
-We'll re-write the scenario code to use setters and getters.
+You might look at that list of advantages and go "Meh, that's not for me, I would rather just access things directly as it's quicker". That's fine, just think carefully about the moment where you update or read a value. Is there any extra code in the calling object that you are using that should really be the responsibility of the object you are accessing, the potion example above for instance? If so think about moving it into a setter or getter method to encapsulate this logic.
+
+This tutorial will continue in the style of using getters and setters so we'll re-write the scenario code now to use them.
 
 ##### oGame::Create
 ```gml
@@ -69,8 +115,15 @@ setCoins = function (newCoins) {
 ##### oPlayer::Step
 ```gml
 if (place_meeting(x, y, oCoin)) {
+	// Increase the coin total
 	var currentCoins = oGame.getCoins();
 	oGame.setCoins(++currentCoins);
+
+	// Start process of destroying coin
+	with (coin) {
+		audio_play_sound(collectSound, 10, false);
+		instance_destroy();
+	}
 }
 ```
 
@@ -159,9 +212,9 @@ if (coin != noone) {
 }
 ```
 
-However `with` is more often used as a way to loop over all objects of a specific type. This is the most efficient way to do this in GameMaker. Additionally `with` maintains access to any locally scoped variables for the duration of it's block. So you will almost certainly end up with a use case for `with`.
+However `with` is more often used as a way to loop over all objects of a specific type. This is the most efficient way to do this in GameMaker. Additionally `with` maintains access to any locally scoped variables for the duration of it's block. So you will invariably end up with a use case for `with`.
 
-When using `with`, always keep in mind what logic you are putting inside it. Is it the responsibility of the original object that called `with` to run the code or does it belong in the callee? If it belongs to the callee add it to a method and then call that instead. Think about if you had not switched contexts if that makes it easier. This should be straightforward if you are already designing your objects with this in mind.
+When using `with`, always keep in mind what logic you are putting inside it. Is it the responsibility of the original object that called `with` to run the code or does it belong in the callee? If it belongs to the callee add it to a method and then call that instead. Think about what you would do if you had not switched contexts if that makes it easier. This should be straightforward if you are already designing your objects with this in mind.
 
 ```gml
 with (oEnemy) {
@@ -173,7 +226,7 @@ This will invoke the method `take_damage` on `oEnemy` and access some damage val
 
 If you would prefer a more functional solution to looping over objects in GameMaker then take a look at the method `for_object` in [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#d-convenience-methods). This is a wrapper around `with` that applies a callback function to each object. 
 
-It makes use of the `with` statement to provide the looping logic but ensures that the callback function is run in the same context that it was written in. This fits better with the style of encapsulating an object's logic in methods and allows us to access our own variables on `self` rather than `other`.
+It makes use of the `with` statement to provide the fast looping logic but ensures that the callback function is run in the same context that it was written in. This allows us to access our own variables on `self` rather than `other`.
 
 ```gml
 for_objects(oEnemy, function (instance) {
@@ -192,7 +245,7 @@ I need to expand on this last point for a moment as this is a major difference b
 1. `with` has access to all local variables in scope. For `for_object`, you need to specify exactly which local variables you want to access to as optional arguments. These are then passed as arguments to the callback function. This is slightly clunky but works!
 2. `with` can both read and write to local variables that hold primitive types such as reals, booleans and strings. When these are passed to a function, such as in the `for_objects` callback, the function will receive a copy of the value. If you change this value it will not affect the original.
 
-To get around this you can store any local primitives in a struct and pass that to `for_objects`. Structs and arrays are passed by reference rather than by value so when a change is made to them it is changing the same object that was passed into the function. This is a workaround but if you need that functionality you can make still make use of it.
+To get around this you can store any local primitives you need to write to, in a struct and pass that to `for_objects`. Structs and arrays are passed by reference rather than by value so when a change is made to them it is changing the same object that was passed into the function. This is a workaround but if you need that functionality you can make still make use of it.
 
 ```
 var locals = { count: 0 };
@@ -201,7 +254,7 @@ for_objects(oInstance, function (instance, locals) {
 	locals.count++;
 }, locals);
 
-show_debug_message(count)		// Prints '1' assuming one instance of oInstance
+show_debug_message(locals.count)		// Prints '1' assuming one instance of oInstance
 ```
 
 The performance of `for_objects` is only marginally slower than the using `with` directly when compiled using YYC and so for the majority of use cases this is not going to cause any problems. If you need every last ounce of performance then you should use `with` directly. If you are not having performance issues then there is no need to optimise this prematurely as the difference is so small.
