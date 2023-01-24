@@ -403,9 +403,13 @@ var titleAnimation = new Tween(titleElement)
 	.after(function () {
 		titleElement.destroy();
 	});
+
+titleAnimation.play();
 ```
 
-The way to achieve this is to return `self` from the setter methods and any other method that is required to configure the object.
+Usually these variables will have a default value already set so that you don't need to explicitly set up each variable. Only if you want to change the default behaviour.
+
+The way to achieve the chaining functionality is to return `self` from the setter methods and any other method that is required to configure the object.
 
 ```gml
 function Tween() constructor {
@@ -415,9 +419,11 @@ function Tween() constructor {
 		repeat = newRepeat;
 		return self;
 	}
+
+	// ...
 }
 ```
 
 The chain is processed from left to right, or top to bottom depending on how you're looking at it. The constructor function returns an instance and then we use the dot notation to access a method on it. That method returns itself, so we have the same instance we originally made and we can go again and select another method.
 
-This is mostly a stylistic choice but it does communicate which 
+This is mostly a stylistic choice but it does communicate to the reader which variables are allowed to change for setting up an object.

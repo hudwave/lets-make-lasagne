@@ -509,9 +509,11 @@ We still need inheritance in GameMaker. Firstly, it can be a good tool when your
 
 Secondly, inheritance is the only way to run collision functions over a group of objects at the same time. Especially using the polymorphic capabilities of inheritance.
 
-If you have an array of objects with unknown types (such as when using `Mixin.get`) then you need to loop over them and perform the check on each instance. In theory the performance should be the same but I don't know if gamemaker makes any optimisations under the hood 🫠.
+If you have an array of objects with unknown types (such as when using `Mixin.get`) then you need to loop over them and perform the check on each instance separately. This will be slower than using an object asset name but you may find it adequate for your requirements. Ideally though, you would be using collision functions with an object asset id.
 
-What I would say is that you can mix and match to make use of inheritance and the other techniques in this chapter at the same time. It doesn't need to be one or the other. Even mixins can inherit from other mixins using constructor inheritance! Let the problem you are working on guide you. If you encounter resistance using inheritance look for other options.
+This makes your choice of inheritance very important for optimising collisions. If for a particular collision check you only want to check enemies, then you would need all your different enemies to inherit from a parent `pEnemy`. As we've discussed previously inheritance might be too rigid a solution to capture the behaviours of all your enemies so you can look to include other options mentioned in this chapter to fulfil that role.
+
+Finally don't be afraid to mix and match inheritance and the other techniques in this chapter at the same time. It doesn't need to be one or the other. Even mixins can inherit from other mixins using constructor inheritance! Let the problem you are working on guide you. If you encounter resistance using inheritance look for other options.
 
 ## [← Previous](/chapter-05-data-binding/chapter-05-data-binding.md)
 
