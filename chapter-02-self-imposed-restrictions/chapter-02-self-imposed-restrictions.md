@@ -260,7 +260,7 @@ show_debug_message(locals.count)		// Prints '1' assuming one instance of oInstan
 The performance of `for_objects` is only marginally slower than the using `with` directly when compiled using YYC and so for the majority of use cases this is not going to cause any problems. If you need every last ounce of performance then you should use `with` directly. If you are not having performance issues then there is no need to optimise this prematurely as the difference is so small.
 
 ### Pre-define all variables in objects
-In GameMaker it is possible to add new variables to an object or constructor struct after it has been created such as in the step event of an object. To make the code easier to understand all variables that an object requires for during it's lifetime should be pre-defined, even if that value is `undefined`.
+In GameMaker it is possible to add new variables to an object or constructor struct after it has been created such as in the step event of an object. To make the code easier to understand all variables that an object requires during it's lifetime should be pre-defined, even if the value is `undefined`.
 
 For a constructor function all variables should be defined in the function itself. For an object you can define variables in 'Variable Definitions' section of the object inspector, or by defining them in the create event.
 

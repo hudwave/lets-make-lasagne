@@ -135,6 +135,7 @@ This opens up some interesting possibilities.
 
 1. A namespace for groups of related functions
 2. Static 'singleton' classes
+3. Custom enum classes
 
 If you are using an older version of GameMaker you can still make of use these patterns, it's just the syntax won't look as nice. Do this by storing the initialising instance as a global variable and accessing the methods via `global` like so.
 
@@ -192,7 +193,154 @@ var instance = new StaticCounter();
 
 In this regard it will behave similarly to a singleton class in that there will only ever be one instance in the game. This means instead of using `global` to store data or references to global objects, we can use the static class instead. Just remember to preface anything that needs to be accessible by the static class with `static`.
 
-As with any global object, think carefully about whether it needs to be global or not. Anywhere the global object is used you are adding in an explicit dependency. 
+As with any global object, think carefully about whether it needs to be global or not. Anywhere the global object is used you are adding in an explicit dependency.
+
+#### Custom enum classes
+
+Enums are a great way to make code more readable and help to enforce pre-defined values. However I find that there are two main limitations of enums in GameMaker.
+
+1. The value assigned to each constant has to be an integer.
+
+Having an assignable value to the enum is a useful feature. You might use an enum value to lookup something in a specific index of an array. Or perhaps you use the enum value for something when saving your game's data. But integers can only go so far, sometimes you might want to use a string value instead. This would make your save data more human readable when you're debugging. You could use it as label text or maybe it could be the name of a function you want to execute.
+
+We can do this now by using a static class
+
+```gml
+function Dir() constructor {
+	static CENTER = "center";
+	static UP = "up";
+	static DOWN = "down";
+	static LEFT = "left";
+	static RIGHT = "right";
+}
+var dir = new Dir();
+
+var testDirection = "up";
+if (testDirection == Dir.UP) {
+	show_debug_message("Going {0}!", Dir.UP);	// Prints: 'Going up!'
+}
+```
+
+While the creation of the static enum is different, the syntax for accessing the enum looks identical to if you had defined a regular enum like so
+
+```gml
+enum Dir {
+	CENTER,
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT,
+}
+
+var testDirection = 1;
+if (testDirection == Dir.UP) {
+	show_debug_message("Going {0}!", Dir.UP);	// Prints: 'Going 1!'
+}
+```
+
+2. It is not possible to natively loop over the value of each enum constant.
+
+Sometimes you might want to loop over each constant in turn and do something with the value. There are workarounds for this if you have not specified specific values for the enums such as setting the last enum value to `length` or `size`. This will then naturally represent the number of actual constants so you can loop over numbers up to this value. However you cannot do this if you have set custom values.
+
+With the static enum class we can add methods and variables to help us with this. As an example lets create a `StringEnum` class to handle the base functionality, any enums we create will inherit from this.
+
+```gml
+function StringEnum() constructor {
+	static values = undefined;
+
+	static getValues = function () {
+		if (values == undefined) {
+			values = [];
+			
+			var keys = variable_struct_get_names(self);
+			for (var i = 0; i < array_length(keys); i++) {
+				var key = keys[i];
+				var value = self[$ key];
+				if (is_string(value)) {
+					array_push(values, value);
+				}
+			}
+		}
+		
+		return values;
+	}
+}
+var stringEnum = new StringEnum();
+```
+
+`StringEnum` has a method `getValues`, this will return an array of the enum's constant values. Notice however that this is populated for the first time when the method is called using lazy instantiation. This is because the `StringEnum` constructor function will be run before the constructor of any inheriting class. This means there is no way of getting the struct values of the child at this point.
+
+When `getValues` is called on the child constructor function, the `self` scope will point to the child constructor's own static struct instead of `StringEnum`. This is used to get a list of the variable names, find any that are strings and add them to the `values` array. In this simple implementation above, be aware that any string values will be added to the array.
+
+Now we can take the exact same `Dir` enum that we created above, inherit from `StringEnum` and then we get the functionality get a list of the enum constants!
+
+```gml
+function Dir() : StringEnum() constructor {
+	static CENTER = "center";
+	static UP = "up";
+	static DOWN = "down";
+	static LEFT = "left";
+	static RIGHT = "right";
+}
+var dir = new Dir();
+
+array_foreach(Dir.getValues(), function (dir) {
+	if (dir == Dir.DOWN) {
+		show_debug_message(dir);	// Prints 'down'
+	}
+});
+```
+
+You don't need to stop there though, you can add methods that apply specifically to your newly created enum. Here's an example of a function that gets the opposite value of the enum constant.
+
+```gml
+// Example of how to define a StringEnum
+function Dir() : StringEnum() constructor {
+	static CENTER = "center";
+	static UP = "up";
+	static DOWN = "down";
+	static LEFT = "left";
+	static RIGHT = "right";
+	
+	static flipDirection = function (dir) {
+		switch (dir) {
+			case Dir.UP:
+				return Dir.DOWN;
+			case Dir.DOWN:
+				return Dir.UP;
+			case Dir.LEFT:
+				return Dir.RIGHT;
+			case Dir.RIGHT:
+				return Dir.LEFT;
+			default:
+				return Dir.CENTER;
+		}
+	}
+}
+var dir = new Dir();
+
+array_foreach(Dir.getValues(), function (dir) {
+	if (dir == Dir.DOWN) {
+		show_debug_message(Dir.flipDirection(dir));		// Prints 'up'
+	}
+});
+```
+
+As a small convenience you can define a macro to make defining new enums simpler.
+
+```gml
+#macro ENUM () : StringEnum() constructor
+```
+
+```gml
+function Dir ENUM {
+	static CENTER = "center";
+	static UP = "up";
+	static DOWN = "down";
+	static LEFT = "left";
+	static RIGHT = "right";
+}
+```
 
 ### C. Method metadata (Annotations)
 
