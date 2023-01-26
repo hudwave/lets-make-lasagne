@@ -14,7 +14,7 @@ The data binding itself is done by calling a single function `data_bind`.
 ##### DataBinding.gml
 ```gml
 function data_bind(source, sourceProperty, target, targetProperty) {
-	// ...
+    // ...
 }
 ```
 
@@ -38,15 +38,15 @@ var uiHud = instance_create_layer(x, y, layer, oHud);
 data_bind(self, "coins", uiHud, "coins");
 
 getCoins = function () {
-	return coins;
+    return coins;
 }
 
 setCoins = function (newCoins) {
-	coins = newCoins;
+    coins = newCoins;
 }
 
 addCoin = function (coin) {
-	setCoins(coins + coin.getValue());
+    setCoins(coins + coin.getValue());
 }
 ```
 
@@ -77,25 +77,25 @@ function data_bind(source, sourceProperty, target, targetProperty) {
 }
 
 function set_value(target, property, value) {
-	if (is_struct(target)) {
-		target[$ property] = value;
-	}
-	else if (instance_exists(target)) {
-		variable_instance_set(target, property, value);
-	}
+    if (is_struct(target)) {
+        target[$ property] = value;
+    }
+    else if (instance_exists(target)) {
+        variable_instance_set(target, property, value);
+    }
 }
 
 function get_value(target, property) {
-	var value = undefined;
-	
-	if (is_struct(target)) {
-		value = variable_struct_get(target, property);
-	}
-	else if (instance_exists(target)) {
-		value = variable_instance_get(target, property);
-	}
-	
-	return value;
+    var value = undefined;
+    
+    if (is_struct(target)) {
+        value = variable_struct_get(target, property);
+    }
+    else if (instance_exists(target)) {
+        value = variable_instance_get(target, property);
+    }
+    
+    return value;
 }
 ```
 First we'll check to see if the source object or struct has been used for data binding before. It does this by checking the existence of the map of bindings stored in `__bindings`. If it doesn't exist then it will create it.
@@ -105,12 +105,12 @@ First we'll check to see if the source object or struct has been used for data b
 #macro DATA_BIND_SIGNALS "__bindings"
 
 function data_bind(source, sourceProperty, target, targetProperty) {
-	// Register the source as a data bind source
-	var bindings = get_value(source, DATA_BIND_SIGNALS);
-	if (bindings == undefined) {
-		bindings = {};
-		set_value(source, DATA_BIND_SIGNALS, bindings);
-	}
+    // Register the source as a data bind source
+    var bindings = get_value(source, DATA_BIND_SIGNALS);
+    if (bindings == undefined) {
+        bindings = {};
+        set_value(source, DATA_BIND_SIGNALS, bindings);
+    }
 }
 ```
 Next we need to check to see if the source property has been bound before. It's possible that the value could be bound to multiple targets. This is done by checking the existence of a signal for the source property. A signal is created if necessary and added to the bindings map.
@@ -120,18 +120,18 @@ Next we need to check to see if the source property has been bound before. It's 
 #macro DATA_BIND_SIGNALS "__bindings"
 
 function data_bind(source, sourceProperty, target, targetProperty) {
-	// Register the source as a data bind source
-	...
+    // Register the source as a data bind source
+    ...
 
-	// Check if sourceProperty has been bound before and signal exists
-	var hasBeenPreviouslyBound = true;
-	
-	var sourceSignal = bindings[$ sourceProperty];
-	if (sourceSignal == undefined) {
-		hasBeenPreviouslyBound = false;
-		sourceSignal = new Signal();
-		bindings[$ sourceProperty] = sourceSignal;
-	}
+    // Check if sourceProperty has been bound before and signal exists
+    var hasBeenPreviouslyBound = true;
+    
+    var sourceSignal = bindings[$ sourceProperty];
+    if (sourceSignal == undefined) {
+        hasBeenPreviouslyBound = false;
+        sourceSignal = new Signal();
+        bindings[$ sourceProperty] = sourceSignal;
+    }
 }
 ```
 
@@ -144,25 +144,25 @@ We need to generate the source setter if it does not already exist. In order to 
 #macro DATA_BIND_SIGNALS "__bindings"
 
 function data_bind(source, sourceProperty, target, targetProperty) {
-	// Register the source as a data bind source
-	...
+    // Register the source as a data bind source
+    ...
 
-	// Check if sourceProperty has been bound before and signal
-	...
+    // Check if sourceProperty has been bound before and signal
+    ...
 
-	// Generate source setter if required
-	if (!hasBeenPreviouslyBound) {
-		var sourceSetterName = generate_setter_name(sourceProperty);
-		...
-	}
+    // Generate source setter if required
+    if (!hasBeenPreviouslyBound) {
+        var sourceSetterName = generate_setter_name(sourceProperty);
+        ...
+    }
 }
 
 // Helper function to generate setter names
 function generate_setter_name(property) {
-	var startLetter = string_upper(string_char_at(property, 1));
-	var remaining = string_copy(property, 2, string_length(property));
-	var setterName = string("set{0}{1}", startLetter, remaining);
-	return setterName;
+    var startLetter = string_upper(string_char_at(property, 1));
+    var remaining = string_copy(property, 2, string_length(property));
+    var setterName = string("set{0}{1}", startLetter, remaining);
+    return setterName;
 }
 ```
 
@@ -170,9 +170,9 @@ Lets look at what the custom setter could look like for a concrete example in th
 
 ```gml
 setCoins = function (newValue) {
-	coins = newValue
-	var signal = __bindings[$ "coins"];
-	signal.emit(newValue);
+    coins = newValue
+    var signal = __bindings[$ "coins"];
+    signal.emit(newValue);
 };
 ```
 
@@ -184,8 +184,8 @@ var sourceSetterName = generate_setter_name(sourceProperty);
 
 // Create a setter function
 var sourceSetter = function (newValue) {
-	self[$ sourceProperty] = newValue;
-	sourceSignal.emit(newValue);
+    self[$ sourceProperty] = newValue;
+    sourceSignal.emit(newValue);
 };
 
 // Put setter on source struct
@@ -207,7 +207,7 @@ The second problem is a little bit trickier to solve. The code above is written 
 var a = "Hello";
 
 var combine = function (b) {
-	return a + b;
+    return a + b;
 };
 
 var c = combine(" World!");
@@ -227,14 +227,14 @@ First we need to create a struct that will contain all the variables we want to 
 ```gml
 // Capture variables from scope
 var scopeVars = {
-	signal: sourceSignal,
-	property: sourceProperty,
+    signal: sourceSignal,
+    property: sourceProperty,
 };
 
 // Create a setter function
 var sourceSetter = function (newValue) {
-	self[$ other.property] = newValue
-	other.signal.emit(newValue);
+    self[$ other.property] = newValue
+    other.signal.emit(newValue);
 };
 
 // Create closure
@@ -248,35 +248,35 @@ Finally the closure is created by calling the `closure` function and passing in 
 ##### DataBinding.gml::closure
 ```gml
 function closure(scopeVars, func, context = undefined) {
-	// Ensure there is a context
-	context ??= self;
-	
-	// Remove context from the original function
-	func = method(undefined, func);
-	
-	// Add context and original function to the captured scope variables
-	scopeVars[$ "__this"] = context;
-	scopeVars[$ "__func"] = func;
-	
-	// Create the closure function
-	var closureFunc = function () {
-		// Generate array of args
-		var __args = [];
-		for (var i = 0; i < argument_count; i++) {
-			array_push(__args, argument[i]);
-		}
-		
-		// Switch to original context to execute the function
-		// Captured variables will appear on other when the function is executed
-		with (__this) {
-			method_call(other.__func, __args);
-		}
-	};
-	
-	// Bind the closure to the captured scope variables struct
-	closureFunc = method(scopeVars, closureFunc);
-	
-	return closureFunc;
+    // Ensure there is a context
+    context ??= self;
+    
+    // Remove context from the original function
+    func = method(undefined, func);
+    
+    // Add context and original function to the captured scope variables
+    scopeVars[$ "__this"] = context;
+    scopeVars[$ "__func"] = func;
+    
+    // Create the closure function
+    var closureFunc = function () {
+        // Generate array of args
+        var __args = [];
+        for (var i = 0; i < argument_count; i++) {
+            array_push(__args, argument[i]);
+        }
+        
+        // Switch to original context to execute the function
+        // Captured variables will appear on other when the function is executed
+        with (__this) {
+            method_call(other.__func, __args);
+        }
+    };
+    
+    // Bind the closure to the captured scope variables struct
+    closureFunc = method(scopeVars, closureFunc);
+    
+    return closureFunc;
 }
 ```
 
@@ -287,45 +287,45 @@ You can read more about how the closure function works in [Appendix A](/appendix
 #macro DATA_BIND_SIGNALS "__bindings"
 
 function data_bind(source, sourceProperty, target, targetProperty) {
-	// Register the source as a data bind source
-	...
+    // Register the source as a data bind source
+    ...
 
-	// Check if sourceProperty has been bound before and signal exists
-	...
+    // Check if sourceProperty has been bound before and signal exists
+    ...
 
-	// Generate source setter if required
-	if (!hasBeenPreviouslyBound) {
-		var sourceSetterName = generate_setter_name(sourceProperty);
-		
-		// Capture variables from current scope
-		var scopeVars = {
-			property: sourceProperty,
-			signal: sourceSignal
-		};
-		
-		// Create a setter function for the source
-		var sourceSetter = undefined;
-		if (is_struct(source)) {
-			sourceSetter = function (newValue) {
-				self[$ other.property] = newValue
-				other.signal.emit(newValue);
-			};
-		}
-		else {
-			sourceSetter = function (newValue) {
-				variable_instance_set(self, other.property, newValue);
-				other.signal.emit(newValue);
-			};
-		}
-		
-		// Create closure and set on the source object
-		set_value(source, sourceSetterName, closure(scopeVars, sourceSetter, source));
-	}
+    // Generate source setter if required
+    if (!hasBeenPreviouslyBound) {
+        var sourceSetterName = generate_setter_name(sourceProperty);
+        
+        // Capture variables from current scope
+        var scopeVars = {
+            property: sourceProperty,
+            signal: sourceSignal
+        };
+        
+        // Create a setter function for the source
+        var sourceSetter = undefined;
+        if (is_struct(source)) {
+            sourceSetter = function (newValue) {
+                self[$ other.property] = newValue
+                other.signal.emit(newValue);
+            };
+        }
+        else {
+            sourceSetter = function (newValue) {
+                variable_instance_set(self, other.property, newValue);
+                other.signal.emit(newValue);
+            };
+        }
+        
+        // Create closure and set on the source object
+        set_value(source, sourceSetterName, closure(scopeVars, sourceSetter, source));
+    }
 }
 
 // Function to generate closures
 function closure(scopeVars, func, context = undefined) {
-	// ...
+    // ...
 }
 ```
 
@@ -338,40 +338,40 @@ Take a deep breath, that was a lot. We're only half way through and we need to a
 #macro DATA_BIND_SIGNALS "__bindings"
 
 function data_bind(source, sourceProperty, target, targetProperty) {
-	// Register the source as a data bind source
-	...
+    // Register the source as a data bind source
+    ...
 
-	// Check if sourceProperty has been bound before and signal exists
-	...
+    // Check if sourceProperty has been bound before and signal exists
+    ...
 
-	// Generate source setter if required
-	...
+    // Generate source setter if required
+    ...
 
-	// Generate target setter if required
-	var targetSetterName = generate_setter_name(targetProperty);
-	
-	var targetSetter = get_value(target, targetSetterName);
-	if (targetSetter == undefined) {
-		// Capture variables from scope
-		var scopeVars = {
-			property: targetProperty,
-		};
-		
-		// Create a setter for the target
-		if (is_struct(target)) {
-			targetSetter = function (newValue) {
-				self[$ other.property] = newValue;
-			};
-		}
-		else {
-			targetSetter = function (newValue) {
-				variable_instance_set(self, other.property, newValue);
-			};
-		}
-		
-		// Create closure and set on the target object
-		set_value(target, targetSetterName, closure(scopeVars, targetSetter, target));
-	}
+    // Generate target setter if required
+    var targetSetterName = generate_setter_name(targetProperty);
+    
+    var targetSetter = get_value(target, targetSetterName);
+    if (targetSetter == undefined) {
+        // Capture variables from scope
+        var scopeVars = {
+            property: targetProperty,
+        };
+        
+        // Create a setter for the target
+        if (is_struct(target)) {
+            targetSetter = function (newValue) {
+                self[$ other.property] = newValue;
+            };
+        }
+        else {
+            targetSetter = function (newValue) {
+                variable_instance_set(self, other.property, newValue);
+            };
+        }
+        
+        // Create closure and set on the target object
+        set_value(target, targetSetterName, closure(scopeVars, targetSetter, target));
+    }
 }
 ```
 
@@ -386,23 +386,23 @@ All we need to do now is connect up the target setter function to the signal and
 #macro DATA_BIND_SIGNALS "__bindings"
 
 function data_bind(source, sourceProperty, target, targetProperty) {
-	// Register the source as a data bind source
-	...
+    // Register the source as a data bind source
+    ...
 
-	// Check if sourceProperty has been bound before and signal exists
-	...
+    // Check if sourceProperty has been bound before and signal exists
+    ...
 
-	// Generate source setter if required
-	...
+    // Generate source setter if required
+    ...
 
-	// Generate target setter if required
-	...
-	
-	// Connect source signal to target setter
-	sourceSignal.connect(target, targetSetter);
-	
-	// Update target to reflect the source's initial value
-	set_value(target, targetProperty, get_value(source, sourceProperty));
+    // Generate target setter if required
+    ...
+    
+    // Connect source signal to target setter
+    sourceSignal.connect(target, targetSetter);
+    
+    // Update target to reflect the source's initial value
+    set_value(target, targetProperty, get_value(source, sourceProperty));
 }
 ```
 

@@ -270,7 +270,7 @@ function Mixin() constructor {
 
         // Shallow copy properties across to target
         var keys = variable_struct_get_names(mixin);
-	
+    
         for (var i = 0; i < array_length(keys); i++) {
             var key = keys[i];
             var value = mixin[$ key];

@@ -25,14 +25,14 @@ Some people like to prefix their private variables with an underscore to differe
 ##### getter method 
 ```gml
 getCoins = function () {
-	return coins;
+    return coins;
 }
 ```
 
 ##### setter method
 ```gml
 setCoins = function (newCoins) {
-	coins = newCoins;
+    coins = newCoins;
 }
 ```
 
@@ -40,48 +40,48 @@ This has a number of advantages over direct access:
 1. If a getter does not exist then you cannot read the variable. If a setter does not exist then you cannot change the value of the variable. This communicates clearly the level of access allowed to anyone reading the code.
 2. You can add additional code to the setter to do validation of the new value to ensure it will not break the object.
     ```gml
-	maxHealth = 50;
-	health = maxHealth;
+    maxHealth = 50;
+    health = maxHealth;
 
-	setHealth = function (newHealth) {
-		if (newHealth > maxHealth) {
-			newHealth = maxHealth;
-		}
-		health = newHealth;
-	}
-	```
+    setHealth = function (newHealth) {
+        if (newHealth > maxHealth) {
+            newHealth = maxHealth;
+        }
+        health = newHealth;
+    }
+    ```
 3. You can create a 'computed' getter that performs some calculation each time it is accessed. This is useful if you have a value that changes often and needs to be up to date when accessed. 
     ```gml
-	queue = [6, 3, 1, 5];
+    queue = [6, 3, 1, 5];
 
-	getLast = function () {
-		return queue[array_length(queue) - 1];
-	}
-	```
+    getLast = function () {
+        return queue[array_length(queue) - 1];
+    }
+    ```
 4. You can perform perform some additional side effect upon getting or setting the value e.g. logging something or checking to see if some threshold has been passed.
     ```gml
-		potionCount = 4;
-		potion = new Potion();
+        potionCount = 4;
+        potion = new Potion();
 
-		getPotion() {
-			if (potionCount > 0) {
-				potionCount--;
-				return potion;
-			}
-		}
-	```
+        getPotion() {
+            if (potionCount > 0) {
+                potionCount--;
+                return potion;
+            }
+        }
+    ```
 5. The getter value does not need to be calculated until it is actually needed. You can check to see if the value is `undefined` when the getter is called and calculate it if required. This is called lazy instantiation. This might be useful if the calculation of a value is particularly costly but might never be needed.
     ```gml
-	largeBuffer = undefined;
+    largeBuffer = undefined;
 
-	getLargeBuffer() {
-		if (largeBuffer == undefined) {
-			largeBuffer = buildLargeBuffer();
-		}
+    getLargeBuffer() {
+        if (largeBuffer == undefined) {
+            largeBuffer = buildLargeBuffer();
+        }
 
-		return largeBuffer;
-	}
-	```
+        return largeBuffer;
+    }
+    ```
 6. Getters and setters can be used as callback functions. This has so many potential uses. You can update or retrieve a value using the callback. 
 7. It is now trivial to debug when a value is set or read. Simply set a break point in the setter or getter.
 8. You can use fluent style setters to configure objects. See [Appendix E](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#e-fluent-style-api) for more details.
@@ -104,26 +104,26 @@ This tutorial will continue in the style of using getters and setters so we'll r
 coins = 0;
 
 getCoins = function () {
-	return coins;
+    return coins;
 }
 
 setCoins = function (newCoins) {
-	coins = newCoins;
+    coins = newCoins;
 }
 ```
 
 ##### oPlayer::Step
 ```gml
 if (place_meeting(x, y, oCoin)) {
-	// Increase the coin total
-	var currentCoins = oGame.getCoins();
-	oGame.setCoins(++currentCoins);
+    // Increase the coin total
+    var currentCoins = oGame.getCoins();
+    oGame.setCoins(++currentCoins);
 
-	// Start process of destroying coin
-	with (coin) {
-		audio_play_sound(collectSound, 10, false);
-		instance_destroy();
-	}
+    // Start process of destroying coin
+    with (coin) {
+        audio_play_sound(collectSound, 10, false);
+        instance_destroy();
+    }
 }
 ```
 
@@ -153,11 +153,11 @@ coins = 0;
 
 // Methods
 getCoins = function () {
-	return coins;
+    return coins;
 }
 
 addCoin = function () {
-	coins++;
+    coins++;
 }
 ```
 
@@ -165,14 +165,14 @@ addCoin = function () {
 ```gml
 var coin = instance_place(x, y, oCoin);
 if (coin != noone) {
-	// Increase the coin total
-	oGame.addCoin();
+    // Increase the coin total
+    oGame.addCoin();
 
-	// Start process of destroying coin
-	with (coin) {
-		audio_play_sound(collectSound, 10, false);
-		instance_destroy();
-	}
+    // Start process of destroying coin
+    with (coin) {
+        audio_play_sound(collectSound, 10, false);
+        instance_destroy();
+    }
 }
 ```
 
@@ -195,8 +195,8 @@ In the scenario code, since we are only using `with` with a single instance so w
 collectSound = sndCoin;
 
 collectCoin = function () {
-	audio_play_sound(collectSound, 10, false);
-	instance_destroy();
+    audio_play_sound(collectSound, 10, false);
+    instance_destroy();
 }
 ```
 
@@ -204,11 +204,11 @@ collectCoin = function () {
 ```gml
 var coin = instance_place(x, y, oCoin);
 if (coin != noone) {
-	// Increase the coin total
-	oGame.addCoin();
+    // Increase the coin total
+    oGame.addCoin();
 
-	// Start process of destroying coin
-	coin.collectCoin();
+    // Start process of destroying coin
+    coin.collectCoin();
 }
 ```
 
@@ -218,7 +218,7 @@ When using `with`, always keep in mind what logic you are putting inside it. Is 
 
 ```gml
 with (oEnemy) {
-	take_damage(other.weapon.strength);
+    take_damage(other.weapon.strength);
 }
 ```
 
@@ -230,7 +230,7 @@ It makes use of the `with` statement to provide the fast looping logic but ensur
 
 ```gml
 for_objects(oEnemy, function (instance) {
-	instance.take_damage(weapon.strength);
+    instance.take_damage(weapon.strength);
 });
 ```
 Comparing this to the above use of the `with` statement, it feels a lot more natural to me. You might have a preference for `with` so go with what works for you. `for_objects` is not a perfect solution by any means but it can handle most of the use cases that you would normally use `with` for:
@@ -251,7 +251,7 @@ To get around this you can store any local primitives you need to write to, in a
 var locals = { count: 0 };
 
 for_objects(oInstance, function (instance, locals) {
-	locals.count++;
+    locals.count++;
 }, locals);
 
 show_debug_message(locals.count)		// Prints '1' assuming one instance of oInstance

@@ -22,11 +22,11 @@ coinCollected = new Signal();
 ```gml
 var coin = instance_place(x, y, oCoin);
 if (coin != noone) {
-	// Emit signal that coin has been collected
-	coinCollected.emit();
+    // Emit signal that coin has been collected
+    coinCollected.emit();
 
-	// Start process of destroying coin
-	coin.collectCoin();
+    // Start process of destroying coin
+    coin.collectCoin();
 }
 ```
 
@@ -46,12 +46,12 @@ var player = instance_create_layer(x, y, layer, oPlayer);
 var uiHud = instance_create_layer(x, y, layer, oHud);
 
 getCoins = function () {
-	return coins;
+    return coins;
 }
 
 addCoin = function () {
-	coins++;
-	uiHud.setCoins(coins);
+    coins++;
+    uiHud.setCoins(coins);
 }
 
 player.coinCollected.connect(self, addCoin);
@@ -70,15 +70,15 @@ Create a new script and call it Signals. Add a new constructor function called `
 ##### Signals.gml
 ```gml
 function Signal() constructor {
-	listeners = [];
+    listeners = [];
 
-	connect = function (target, callback) {
+    connect = function (target, callback) {
 
-	}
+    }
 
-	emit = function () {
+    emit = function () {
 
-	}
+    }
 }
 ```
 
@@ -87,16 +87,16 @@ We also need a small data class called `Listener` to store the details of each l
 ##### Signals.gml
 ```gml
 function Listener(_target, _callback) constructor {
-	target = _target;
-	callback = _callback;
+    target = _target;
+    callback = _callback;
 
-	getTarget = function () {
-		return target;
-	}
+    getTarget = function () {
+        return target;
+    }
 
-	getCallback = function () {
-		return callback;
-	}
+    getCallback = function () {
+        return callback;
+    }
 }
 ```
 
@@ -105,7 +105,7 @@ Implementing the connect method is simple, all we need to do is add a new listen
 ##### Signals.gml::Signal::connect
 ```gml
 connect = function (target, callback) {
-	array_push(listeners, new Listener(target, callback));
+    array_push(listeners, new Listener(target, callback));
 }
 ```
 
@@ -116,14 +116,14 @@ We're going to implement the simplest version of the emit method first and then 
 ##### Signals.gml::Signal::emit
 ```gml
 emit = function (payload = undefined) {
-	for (var i = 0; i < array_length(listeners); i++) {
-		var listener = listeners[i];
-			
-		if (instance_exists(listener)) {
-			var callback = listener.getCallback();
-			callback(payload);
-		}
-	}
+    for (var i = 0; i < array_length(listeners); i++) {
+        var listener = listeners[i];
+            
+        if (instance_exists(listener)) {
+            var callback = listener.getCallback();
+            callback(payload);
+        }
+    }
 }
 ```
 
@@ -132,8 +132,8 @@ Notice that we have added an optional argument called payload. This will allow y
 ##### oCoin::Create
 ```gml
 getValue = function () {
-	// value is defined in the Variable Definitions part of the object inspector so that it can be set in the room editor
-	return value;
+    // value is defined in the Variable Definitions part of the object inspector so that it can be set in the room editor
+    return value;
 }
 ```
 
@@ -141,19 +141,19 @@ getValue = function () {
 ```gml
 var coin = instance_place(x, y, oCoin);
 if (coin != noone) {
-	// Emit signal that coin has been collected and pass coin to listeners
-	coinCollected.emit(coin);
+    // Emit signal that coin has been collected and pass coin to listeners
+    coinCollected.emit(coin);
 
-	// Start process of destroying coin
-	coin.collectCoin();
+    // Start process of destroying coin
+    coin.collectCoin();
 }
 ```
 
 ##### oGame::Create::addCoin
 ```gml
 addCoin = function (coin) {
-	coins += coin.getValue();
-	uiHud.setCoins(coins);
+    coins += coin.getValue();
+    uiHud.setCoins(coins);
 }
 ```
 
@@ -172,25 +172,25 @@ The `Signal` class is designed to decouple from other objects. However if we hol
 ##### Signals.gml::Listener
 ```gml
 function Listener(_target, _callback) constructor {
-	target = undefined;
-	callback = _callback;
+    target = undefined;
+    callback = _callback;
 
-	if (is_struct(_target)) {
-		// Wrap struct in weak reference
-		target = weak_ref_create(_target);
-	}
-	else if (instance_exists(_target)) {
-		// Is an object so nothing else is required
-		target = _target;
-	}
+    if (is_struct(_target)) {
+        // Wrap struct in weak reference
+        target = weak_ref_create(_target);
+    }
+    else if (instance_exists(_target)) {
+        // Is an object so nothing else is required
+        target = _target;
+    }
 
-	getTarget = function () {
-		return target;
-	}
+    getTarget = function () {
+        return target;
+    }
 
-	getCallback = function () {
-		return callback;
-	}
+    getCallback = function () {
+        return callback;
+    }
 }
 ```
 
@@ -199,41 +199,41 @@ Now that the struct is wrapped in a weak reference the `getTarget` method will r
 ##### Signals.gml::Listener
 ```gml
 function Listener(_target, _callback) constructor {
-	target = undefined;
-	callback = _callback;
-	getTarget = undefined
-	exists = undefined;
+    target = undefined;
+    callback = _callback;
+    getTarget = undefined
+    exists = undefined;
 
-	// Initialise to struct specific implementations
-	if (is_struct(_target)) {
-		// Wrap struct in weak reference
-		target = weak_ref_create(_target);
+    // Initialise to struct specific implementations
+    if (is_struct(_target)) {
+        // Wrap struct in weak reference
+        target = weak_ref_create(_target);
 
-		getTarget = function () {
-			return target.ref; 
-		};
+        getTarget = function () {
+            return target.ref; 
+        };
 
-		exists = function () {
-			return weak_ref_alive(target);
-		};
-	}
-	// Initialise to object specific implementations
-	else if (instance_exists(_target)) {
-		// Is an object so nothing else is required
-		target = _target;
-		
-		getTarget = function () {
-			return target;
-		};
+        exists = function () {
+            return weak_ref_alive(target);
+        };
+    }
+    // Initialise to object specific implementations
+    else if (instance_exists(_target)) {
+        // Is an object so nothing else is required
+        target = _target;
+        
+        getTarget = function () {
+            return target;
+        };
 
-		exists = function () {
-			return instance_exists(target);
-		};
-	}
+        exists = function () {
+            return instance_exists(target);
+        };
+    }
 
-	getCallback = function () {
-		return callback;
-	}
+    getCallback = function () {
+        return callback;
+    }
 }
 ```
 
@@ -242,47 +242,47 @@ The initialisation of the `Listener` class is becoming quite complicated now. Th
 ##### Signals.gml::Listener
 ```gml
 function Listener(_target, _callback) constructor {
-	target = undefined;
-	callback = _callback;
-	getTarget = undefined
-	exists = undefined;
+    target = undefined;
+    callback = _callback;
+    getTarget = undefined
+    exists = undefined;
 
-	init = function (_target) {
-		// Initialise to struct specific implementations
-		if (is_struct(_target)) {
-			// Wrap struct in weak reference
-			target = weak_ref_create(_target);
+    init = function (_target) {
+        // Initialise to struct specific implementations
+        if (is_struct(_target)) {
+            // Wrap struct in weak reference
+            target = weak_ref_create(_target);
 
-			getTarget = function () {
-				return target.ref; 
-			};
+            getTarget = function () {
+                return target.ref; 
+            };
 
-			exists = function () {
-				return weak_ref_alive(target);
-			};
-		}
-		// Initialise to object specific implementations
-		else if (instance_exists(_target)) {
-			// Is an object so nothing else is required
-			target = _target;
-			
-			getTarget = function () {
-				return target;
-			};
+            exists = function () {
+                return weak_ref_alive(target);
+            };
+        }
+        // Initialise to object specific implementations
+        else if (instance_exists(_target)) {
+            // Is an object so nothing else is required
+            target = _target;
+            
+            getTarget = function () {
+                return target;
+            };
 
-			exists = function () {
-				return instance_exists(target);
-			};
-		}
-	}
+            exists = function () {
+                return instance_exists(target);
+            };
+        }
+    }
 
-	getCallback = function () {
-		return callback;
-	}
+    getCallback = function () {
+        return callback;
+    }
 
-	// Add the call to init at the end of the class
-	// Or remove it and call it manually from another object
-	init(_target);
+    // Add the call to init at the end of the class
+    // Or remove it and call it manually from another object
+    init(_target);
 }
 ```
 
@@ -291,22 +291,22 @@ The `init` method can be called at the end of the constructor function or it off
 ##### Signals.gml::Signal
 ```gml
 function Signal() constructor {
-	listeners = [];
+    listeners = [];
 
-	connect = function (target, callback) {
-		array_push(listeners, new Listener(target, callback));
-	}
+    connect = function (target, callback) {
+        array_push(listeners, new Listener(target, callback));
+    }
 
-	emit = function (payload = undefined) {
-		for (var i = 0; i < array_length(listeners); i++) {
-			var listener = listeners[i];
-				
-			if (listener.exists()) {
-				var callback = listener.getCallback();
-				callback(payload);
-			}
-		}
-	}
+    emit = function (payload = undefined) {
+        for (var i = 0; i < array_length(listeners); i++) {
+            var listener = listeners[i];
+                
+            if (listener.exists()) {
+                var callback = listener.getCallback();
+                callback(payload);
+            }
+        }
+    }
 }
 ```
 
@@ -317,25 +317,25 @@ If the target of the listener no longer exists then we don't want it to remain a
 ##### Signals.gml::Signal
 ```gml
 function Signal() constructor {
-	listeners = [];
+    listeners = [];
 
-	connect = function (target, callback) {
-		array_push(listeners, new Listener(target, callback));
-	}
+    connect = function (target, callback) {
+        array_push(listeners, new Listener(target, callback));
+    }
 
-	emit = function (payload = undefined) {
-		for (var i = array_length(listeners) -1; i > -1; i--) {
-			var listener = listeners[i];
-				
-			if (listener.exists()) {
-				var callback = listener.getCallback();
-				callback(payload);
-			}
-			else {
-				array_delete(listeners, i, 1);
-			}
-		}
-	}
+    emit = function (payload = undefined) {
+        for (var i = array_length(listeners) -1; i > -1; i--) {
+            var listener = listeners[i];
+                
+            if (listener.exists()) {
+                var callback = listener.getCallback();
+                callback(payload);
+            }
+            else {
+                array_delete(listeners, i, 1);
+            }
+        }
+    }
 }
 ```
 
@@ -344,14 +344,14 @@ One last thing you might need is a way to disconnect from the signal. This simpl
 ##### Signals.gml::Signal::disconnect
 ```gml
 disconnect = function (target) {
-	for (var i = 0; i < array_length(listeners); i++) {
-		var listener = listeners[i];
-			
-		if (listener.exists() && listener.getTarget() == target) {
-			array_delete(listeners, i, 1);
-			break;
-		}
-	}
+    for (var i = 0; i < array_length(listeners); i++) {
+        var listener = listeners[i];
+            
+        if (listener.exists() && listener.getTarget() == target) {
+            array_delete(listeners, i, 1);
+            break;
+        }
+    }
 }
 ```
 
@@ -367,9 +367,9 @@ disconnect = function (target) {
  clicked = new Signal();
 
  handleEvent = function (event) {
-	if (event.getType() == UI_EVENT_MOUSE_CLICKED && containsPoint(event.getX(), event.getY())) {
-		clicked.emit();
-	}
+    if (event.getType() == UI_EVENT_MOUSE_CLICKED && containsPoint(event.getX(), event.getY())) {
+        clicked.emit();
+    }
  }
  ```
 
@@ -381,11 +381,11 @@ You might need to know when an animation has ended. Instead of checking the obje
  animationEnded = new Signal();
 
  stepAnimation = function () {
-	position++;
+    position++;
 
-	if (position > length) {
-		animationEnded.emit();
-	}
+    if (position > length) {
+        animationEnded.emit();
+    }
  }
  ```
 
@@ -398,20 +398,20 @@ objectEntered = new Signal();
 objectExited = new Signal();
 
 checkCollisions = function () {
-	var collisionList = ds_list_create();
-	var collisions = collision_circle_list(x, y, 15, pEntity, false, true, collisionList, true);
+    var collisionList = ds_list_create();
+    var collisions = collision_circle_list(x, y, 15, pEntity, false, true, collisionList, true);
 
-	var newObjects = findNewObjects(collisionList);
-	for (var i = 0; i < array_length(newObjects); i++) {
-		entityEntered.emit(newObjects[i]);
-	}
+    var newObjects = findNewObjects(collisionList);
+    for (var i = 0; i < array_length(newObjects); i++) {
+        entityEntered.emit(newObjects[i]);
+    }
 
-	var leavingObjects = findLeavingObjects(collisionList);
-	for (var i = 0; i < array_length(leavingObjects); i++) {
-		entityExited.emit(leavingObjects[i]);
-	}
+    var leavingObjects = findLeavingObjects(collisionList);
+    for (var i = 0; i < array_length(leavingObjects); i++) {
+        entityExited.emit(leavingObjects[i]);
+    }
 
-	ds_list_destroy(list);
+    ds_list_destroy(list);
 }
  ```
 
@@ -424,13 +424,13 @@ If you have a state machine you can emit signals upon entering or leaving a stat
  stateExited = new Signal();
 
 exitState = function () {
-	onExit();
-	stateExited.emit(currentStateName);
+    onExit();
+    stateExited.emit(currentStateName);
  }
 
  enterState = function () {
-	onEnter();
-	stateEntered.emit(currentStateName);
+    onEnter();
+    stateEntered.emit(currentStateName);
  }
  ```
 

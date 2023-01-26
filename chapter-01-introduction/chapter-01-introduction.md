@@ -32,14 +32,14 @@ So lets just call that directly from the player and increase the count. We can a
 var coin = instance_place(x, y, oCoin);
 
 if (coin != noone) {
-	// Increase the coin total
-	oGame.coins++;
-	
-	// Start process of destroying coin
-	with (coin) {
-		audio_play_sound(collectSound, 10, false);
-		instance_destroy();
-	}
+    // Increase the coin total
+    oGame.coins++;
+    
+    // Start process of destroying coin
+    with (coin) {
+        audio_play_sound(collectSound, 10, false);
+        instance_destroy();
+    }
 }
 ```
 
@@ -64,8 +64,8 @@ To get the test to work we also need to setup the game controller  (which may ha
 ##### oPlayer::Step
 ```gml
 if (instance_exists(oGame)) {
-	// Increase the coin total
-	oGame.coins++;
+    // Increase the coin total
+    oGame.coins++;
 }
 ```
 

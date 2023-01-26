@@ -13,7 +13,7 @@ GameMaker does not natively support closures. This is a concept from functional 
 var a = "Hello";
 
 var combine = function (b) {
-	return a + b;
+    return a + b;
 };
 
 var c = combine(" World!");
@@ -63,35 +63,35 @@ Finally we call the function `closure` (which we will define below) to do the ma
 ##### DataBinding.gml::closure
 ```gml
 function closure(scopeVars, func, context = undefined) {
-	// Ensure there is a context
-	context ??= self;
-	
-	// Remove context from the original function
-	func = method(undefined, func);
-	
-	// Add context and original function to the captured scope variables
-	scopeVars[$ "__this"] = context;
-	scopeVars[$ "__func"] = func;
-	
-	// Create the closure function
-	var closureFunc = function () {
-		// Generate array of args
-		var __args = [];
-		for (var i = 0; i < argument_count; i++) {
-			array_push(__args, argument[i]);
-		}
-		
-		// Switch to original context to execute the function
-		// Captured variables will appear on other when the function is executed
-		with (__this) {
-			method_call(other.__func, __args);
-		}
-	};
-	
-	// Bind the closure to the captured scope variables struct
-	closureFunc = method(scopeVars, closureFunc);
-	
-	return closureFunc;
+    // Ensure there is a context
+    context ??= self;
+    
+    // Remove context from the original function
+    func = method(undefined, func);
+    
+    // Add context and original function to the captured scope variables
+    scopeVars[$ "__this"] = context;
+    scopeVars[$ "__func"] = func;
+    
+    // Create the closure function
+    var closureFunc = function () {
+        // Generate array of args
+        var __args = [];
+        for (var i = 0; i < argument_count; i++) {
+            array_push(__args, argument[i]);
+        }
+        
+        // Switch to original context to execute the function
+        // Captured variables will appear on other when the function is executed
+        with (__this) {
+            method_call(other.__func, __args);
+        }
+    };
+    
+    // Bind the closure to the captured scope variables struct
+    closureFunc = method(scopeVars, closureFunc);
+    
+    return closureFunc;
 }
 ```
 
@@ -112,9 +112,9 @@ The behaviour of static variables has changed in version `2023.1`. For construct
 ##### StaticTest.gml
 ```gml
 function StaticTest() constructor {
-	static test = function () {
-		// ...
-	}
+    static test = function () {
+        // ...
+    }
 }
 
 // Create an instance to initialise the statics
@@ -150,11 +150,11 @@ If you had a group of functions that operated on a arrays you would likely put t
 
 ```Arrays.gml
 function array_shuffle(array) {
-	// ...
+    // ...
 }
 
 function array_sort(array) {
-	// ...
+    // ...
 }
 ```
 
@@ -162,13 +162,13 @@ This can now be replaced by a utility class where each method is defined as stat
 
 ```Arrays.gml
 function Array() constructor {
-	static shuffle = function (array) {
-		// ...
-	}
+    static shuffle = function (array) {
+        // ...
+    }
 
-	static sort = function (array) {
-		// ...
-	}
+    static sort = function (array) {
+        // ...
+    }
 }
 var instance = new Array();
 ```
@@ -182,11 +182,11 @@ In addition to just methods we can also add state to these classes.
 ##### StaticTest.gml
 ```gml
 function StaticCounter() constructor {
-	static count = 0;
+    static count = 0;
 
-	static add = function () {
-		count++;
-	}
+    static add = function () {
+        count++;
+    }
 }
 var instance = new StaticCounter();
 ```
@@ -207,17 +207,17 @@ We can do this now by using a static class
 
 ```gml
 function Dir() constructor {
-	static CENTER = "center";
-	static UP = "up";
-	static DOWN = "down";
-	static LEFT = "left";
-	static RIGHT = "right";
+    static CENTER = "center";
+    static UP = "up";
+    static DOWN = "down";
+    static LEFT = "left";
+    static RIGHT = "right";
 }
 var dir = new Dir();
 
 var testDirection = "up";
 if (testDirection == Dir.UP) {
-	show_debug_message("Going {0}!", Dir.UP);	// Prints: 'Going up!'
+    show_debug_message("Going {0}!", Dir.UP);	// Prints: 'Going up!'
 }
 ```
 
@@ -225,16 +225,16 @@ While the creation of the static enum is different, the syntax for accessing the
 
 ```gml
 enum Dir {
-	CENTER,
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
+    CENTER,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
 }
 
 var testDirection = 1;
 if (testDirection == Dir.UP) {
-	show_debug_message("Going {0}!", Dir.UP);	// Prints: 'Going 1!'
+    show_debug_message("Going {0}!", Dir.UP);	// Prints: 'Going 1!'
 }
 ```
 
@@ -246,24 +246,24 @@ With the static enum class we can add methods and variables to help us with this
 
 ```gml
 function StringEnum() constructor {
-	static values = undefined;
+    static values = undefined;
 
-	static getValues = function () {
-		if (values == undefined) {
-			values = [];
-			
-			var keys = variable_struct_get_names(self);
-			for (var i = 0; i < array_length(keys); i++) {
-				var key = keys[i];
-				var value = self[$ key];
-				if (is_string(value)) {
-					array_push(values, value);
-				}
-			}
-		}
-		
-		return values;
-	}
+    static getValues = function () {
+        if (values == undefined) {
+            values = [];
+            
+            var keys = variable_struct_get_names(self);
+            for (var i = 0; i < array_length(keys); i++) {
+                var key = keys[i];
+                var value = self[$ key];
+                if (is_string(value)) {
+                    array_push(values, value);
+                }
+            }
+        }
+        
+        return values;
+    }
 }
 var stringEnum = new StringEnum();
 ```
@@ -276,18 +276,18 @@ Now we can take the exact same `Dir` enum that we created above, inherit from `S
 
 ```gml
 function Dir() : StringEnum() constructor {
-	static CENTER = "center";
-	static UP = "up";
-	static DOWN = "down";
-	static LEFT = "left";
-	static RIGHT = "right";
+    static CENTER = "center";
+    static UP = "up";
+    static DOWN = "down";
+    static LEFT = "left";
+    static RIGHT = "right";
 }
 var dir = new Dir();
 
 array_foreach(Dir.getValues(), function (dir) {
-	if (dir == Dir.DOWN) {
-		show_debug_message(dir);	// Prints 'down'
-	}
+    if (dir == Dir.DOWN) {
+        show_debug_message(dir);	// Prints 'down'
+    }
 });
 ```
 
@@ -296,33 +296,33 @@ You don't need to stop there though, you can add methods that apply specifically
 ```gml
 // Example of how to define a StringEnum
 function Dir() : StringEnum() constructor {
-	static CENTER = "center";
-	static UP = "up";
-	static DOWN = "down";
-	static LEFT = "left";
-	static RIGHT = "right";
-	
-	static flipDirection = function (dir) {
-		switch (dir) {
-			case Dir.UP:
-				return Dir.DOWN;
-			case Dir.DOWN:
-				return Dir.UP;
-			case Dir.LEFT:
-				return Dir.RIGHT;
-			case Dir.RIGHT:
-				return Dir.LEFT;
-			default:
-				return Dir.CENTER;
-		}
-	}
+    static CENTER = "center";
+    static UP = "up";
+    static DOWN = "down";
+    static LEFT = "left";
+    static RIGHT = "right";
+    
+    static flipDirection = function (dir) {
+        switch (dir) {
+            case Dir.UP:
+                return Dir.DOWN;
+            case Dir.DOWN:
+                return Dir.UP;
+            case Dir.LEFT:
+                return Dir.RIGHT;
+            case Dir.RIGHT:
+                return Dir.LEFT;
+            default:
+                return Dir.CENTER;
+        }
+    }
 }
 var dir = new Dir();
 
 array_foreach(Dir.getValues(), function (dir) {
-	if (dir == Dir.DOWN) {
-		show_debug_message(Dir.flipDirection(dir));		// Prints 'up'
-	}
+    if (dir == Dir.DOWN) {
+        show_debug_message(Dir.flipDirection(dir));		// Prints 'up'
+    }
 });
 ```
 
@@ -334,11 +334,11 @@ As a small convenience you can define a macro to make defining new enums simpler
 
 ```gml
 function Dir ENUM {
-	static CENTER = "center";
-	static UP = "up";
-	static DOWN = "down";
-	static LEFT = "left";
-	static RIGHT = "right";
+    static CENTER = "center";
+    static UP = "up";
+    static DOWN = "down";
+    static LEFT = "left";
+    static RIGHT = "right";
 }
 ```
 
@@ -367,10 +367,10 @@ For example if you are creating a unit test framework you can mark which methods
 
 ```ArrayTest.gml
 function ArrayTest() constructor {
-	arrayShuffleTest = function () {
+    arrayShuffleTest = function () {
 
-	}
-	arrayShuffleTest.test = true;
+    }
+    arrayShuffleTest.test = true;
 }
 ```
 
@@ -378,26 +378,26 @@ Now we could build a `TestRunner` class that has a method `runTests` that takes 
 
 ```TestRunner.gml
 function TestRunner() constructor {
-	runTests = function (testSuite) {
-		var keys = variable_struct_get_names(testSuite);
-		for (var i = 0; i < array_length(keys); i++) {
-			var key = keys[i];
-			var value = testSuite[$ key];
-			
-			if (typeof(value) == "method" &&
-				variable_struct_exists(testSuite, "test") &&
-				value.test) {
-				
-				// Run Test
-				try {
-					value();
-				}
-				catch (e) {
-					// Mark test as failed
-				}
-			}
-		}
-	}
+    runTests = function (testSuite) {
+        var keys = variable_struct_get_names(testSuite);
+        for (var i = 0; i < array_length(keys); i++) {
+            var key = keys[i];
+            var value = testSuite[$ key];
+            
+            if (typeof(value) == "method" &&
+                variable_struct_exists(testSuite, "test") &&
+                value.test) {
+                
+                // Run Test
+                try {
+                    value();
+                }
+                catch (e) {
+                    // Mark test as failed
+                }
+            }
+        }
+    }
 }
 ```
 
@@ -427,29 +427,29 @@ Below are a reference for the convenience functions used in places throughout th
  * @param {Any} [argument]				Optional arguments to pass to the callback function.
  */
 function for_objects(objectId, callback) {
-	callback = method(self, callback);
-	
-	// Minor optimisation for no optional arguments
-	if (argument_count == 2) {
-		with (objectId) {
-	        callback(self);
-	    }
-	}
-	else {
-		var args = array_create(argument_count - 1);
-		for (var i = 2; i < argument_count; i++) {
-			args[i - 1] =  argument[i];
-		}
-	
-		with (objectId) {
-			args[0] = self;
-			var breakOut = method_call(callback, args);
-			
-			if (breakOut) {
-				break;
-			}
-		}
-	}
+    callback = method(self, callback);
+    
+    // Minor optimisation for no optional arguments
+    if (argument_count == 2) {
+        with (objectId) {
+            callback(self);
+        }
+    }
+    else {
+        var args = array_create(argument_count - 1);
+        for (var i = 2; i < argument_count; i++) {
+            args[i - 1] =  argument[i];
+        }
+    
+        with (objectId) {
+            args[0] = self;
+            var breakOut = method_call(callback, args);
+            
+            if (breakOut) {
+                break;
+            }
+        }
+    }
 }
 ```
 
@@ -464,12 +464,12 @@ function for_objects(objectId, callback) {
  * @param {Any} value						The value to set.
  */
 function set_value(target, property, value) {
-	if (is_struct(target)) {
-		target[$ property] = value;
-	}
-	else if (instance_exists(target)) {
-		variable_instance_set(target, property, value);
-	}
+    if (is_struct(target)) {
+        target[$ property] = value;
+    }
+    else if (instance_exists(target)) {
+        variable_instance_set(target, property, value);
+    }
 }
 ```
 
@@ -484,16 +484,16 @@ function set_value(target, property, value) {
  * @param {String} property					The name of the property to retrieve.
  */
 function get_value(target, property) {
-	var value = undefined;
-	
-	if (is_struct(target)) {
-		value = variable_struct_get(target, property);
-	}
-	else if (instance_exists(target)) {
-		value = variable_instance_get(target, property);
-	}
-	
-	return value;
+    var value = undefined;
+    
+    if (is_struct(target)) {
+        value = variable_struct_get(target, property);
+    }
+    else if (instance_exists(target)) {
+        value = variable_instance_get(target, property);
+    }
+    
+    return value;
 }
 ```
 
@@ -505,19 +505,19 @@ function get_value(target, property) {
  * @param {Id.Instance, Struct} instance	The object to check existence of.
  */
 function object_exists(instance) {
-	if (is_struct(instance)) {
-		if (instanceof(instance) == "weakref") {
-			return weak_ref_alive(instance);
-		}
-		else {
-			return instance != undefined;
-		}
-	}
-	else if (typeof(instance) == "ref") {
-		return instance_exists(instance);
-	}
+    if (is_struct(instance)) {
+        if (instanceof(instance) == "weakref") {
+            return weak_ref_alive(instance);
+        }
+        else {
+            return instance != undefined;
+        }
+    }
+    else if (typeof(instance) == "ref") {
+        return instance_exists(instance);
+    }
 
-	return false;
+    return false;
 }
 ```
 
@@ -533,7 +533,7 @@ titleAnimation.duration = 90;
 titleAnimation.addProperty("xScale", TWEEN_CURVE_POP);
 titleAnimation.addProperty("yScale", TWEEN_CURVE_POP);
 titleAnimation.after(function () {
-	titleElement.destroy();
+    titleElement.destroy();
 });
 
 titleAnimation.play();
@@ -543,14 +543,14 @@ It's possible to streamline this by using a Fluent style API. This will allow yo
 
 ```gml
 var titleAnimation = new Tween(titleElement)
-	.setRepeat(false)
-	.setPersistent(false)
-	.setDuration(90)
-	.addProperty("xScale", TWEEN_CURVE_POP)
-	.addProperty("yScale", TWEEN_CURVE_POP)
-	.after(function () {
-		titleElement.destroy();
-	});
+    .setRepeat(false)
+    .setPersistent(false)
+    .setDuration(90)
+    .addProperty("xScale", TWEEN_CURVE_POP)
+    .addProperty("yScale", TWEEN_CURVE_POP)
+    .after(function () {
+        titleElement.destroy();
+    });
 
 titleAnimation.play();
 ```
@@ -561,14 +561,14 @@ The way to achieve the chaining functionality is to return `self` from the sette
 
 ```gml
 function Tween() constructor {
-	repeat = false;
+    repeat = false;
 
-	setRepeat = function (newRepeat) {
-		repeat = newRepeat;
-		return self;
-	}
+    setRepeat = function (newRepeat) {
+        repeat = newRepeat;
+        return self;
+    }
 
-	// ...
+    // ...
 }
 ```
 

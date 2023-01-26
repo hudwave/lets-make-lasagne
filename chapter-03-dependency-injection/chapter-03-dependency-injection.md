@@ -42,7 +42,7 @@ Lets look at how dependency injection changes our scenario code.
 gameController = undefined;
 
 setGameController = function (newGameController) {
-	gameController = newGameController;
+    gameController = newGameController;
 }
 ```
 
@@ -51,11 +51,11 @@ setGameController = function (newGameController) {
 var coin = instance_place(x, y, oCoin);
 
 if (coin != noone) {
-	// Increase the coin total
-	gameController.addCoin();
+    // Increase the coin total
+    gameController.addCoin();
 
-	// Start process of destroying coin
-	coin.collectCoin();
+    // Start process of destroying coin
+    coin.collectCoin();
 }
 ```
 
@@ -64,7 +64,7 @@ if (coin != noone) {
 coins = 0
 
 setCoins = function (newCoins) {
-	coins = newCoins;
+    coins = newCoins;
 }
 ```
 
@@ -83,12 +83,12 @@ player.setGameController(self);
 uiHud = instance_create_layer(x, y, layer, oHud);
 
 getCoins = function () {
-	return coins;
+    return coins;
 }
 
 addCoin = function () {
-	coins++;
-	uiHud.setCoins(coins);
+    coins++;
+    uiHud.setCoins(coins);
 }
 ```
 
@@ -115,9 +115,9 @@ What we need to do is pass in a dummy or mock version of the game controller tha
 
 ```gml
 var mockGameController = {
-	addCoin: function () {
+    addCoin: function () {
 
-	}
+    }
 };
 ```
 
@@ -126,9 +126,9 @@ This process of creating the dummy game controller is called mocking. There are 
 ##### rTest:Creation Code
 ```gml
 var mockGameController = {
-	addCoin: function () {
+    addCoin: function () {
 
-	}
+    }
 };
 
 oPlayer.setGameController(mockGameController);
