@@ -36,6 +36,10 @@ setCoins = function (newCoins) {
 }
 ```
 
+Whenever you want to access a variable on another object you would now use the appropriate getter or setter method. Note that you can still access the variable directly if it the objects own variable. An object is allowed to modify it's own state as it sees fit.
+
+Using getters and setters still doesn't prevent us from accessing the properties directly from other objects so we need a bit of self control to make sure we stick to this method and actually write/use the getters/setters.
+
 This has a number of advantages over direct access:
 1. If a getter does not exist then you cannot read the variable. If a setter does not exist then you cannot change the value of the variable. This communicates clearly the level of access allowed to anyone reading the code.
 2. You can add additional code to the setter to do validation of the new value to ensure it will not break the object.
@@ -87,15 +91,14 @@ This has a number of advantages over direct access:
 8. You can use fluent style setters to configure objects. See [Appendix E](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#e-fluent-style-api) for more details.
 9. Autocomplete can be used to get a nice filtered list of all properties you can read or modify. By typing `object.set` or `object.get` you will see a filtered list of just the setters or getters on `object`. If you use direct property access you will also see loads of other variables and methods that may not be relevant.
 10. Getters and setters can be overridden to add new behaviour. We will use this fact in Chapter 5 to create a data binding system.
+11. You can apply metadata to getter and setter functions but not to individual variables. This might be useful for things like a serialisation library. See [Appendix C](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#c-method-metadata-annotations) for more details.
 
-The disadvantages are:
+The main disadvantages are verbosity:
 1. You need to write more code and that takes effort, I sympathise 😩
 2. It takes slightly longer to write `.getVariable()` than just `.variable`
 3. It creates up to two functions in memory for each instance variable (This is negligible though. Stop worrying about performance and prioritise code first!)
 
-Using getters and setters still doesn't prevent us from accessing the properties directly so we need a bit of self control to make sure we stick to this method and actually write/use the getters/setters.
-
-You might look at that list of advantages and go "Meh, that's not for me, I would rather just access things directly as it's quicker". That's fine, just think carefully about the moment where you update or read a value. Is there any extra code in the calling object that you are using that should really be the responsibility of the object you are accessing, the potion example above for instance? If so think about moving it into a setter or getter method to encapsulate this logic.
+You might look at that list of advantages and go "Meh, that's not for me, I would rather just access things directly as it's quicker". That's fine, just think carefully about the moment where you update or read a value. Is there any extra code in the calling object you are using that should really be the responsibility of the object you are accessing or vice versa. The potion example above for instance? If so think about moving it into a setter or getter method anyway to encapsulate this logic.
 
 This tutorial will continue in the style of using getters and setters so we'll re-write the scenario code now to use them.
 
