@@ -19,6 +19,18 @@ attack = function () {
 }
 ```
 
+#### Extending
+Extending the capabilities of a parent object using `event_inherited` by adding new code and behaviours e.g. adding a secondary attack to a child enemy that is not present in any other enemies.
+
+##### oSpecialEnemy::Create
+```gml
+event_inherited();
+
+specialAttack = function () {
+    // Do special damage
+}
+```
+
 #### Overriding
 Overriding parent behaviour in the child object to produce different effects e.g. making the base attack stronger in a powerful child enemy.
 
@@ -33,21 +45,9 @@ attack = function () {
 }
 ```
 
-Notice that we have still inherited the original create event using `event_inherited` which will run the parent's create event first. You might think that this would only allow us to extend the parent's behaviour. In GameMaker you have the option to override the event which does not run the parent's create event.
+Notice that we have still inherited the original create event using `event_inherited` which will run the parent's create event first. You might think that we should have chosen the override option instead, as by inheriting the event it would only allow us to extend the parent's behaviour.
 
-However since we are encapsulating our functionality in methods rather than whole events we choose to inherit them. The overriding here occurs when we re-define the `attack` method. This gives us much more control over what is overridden while still being able to inherit other methods and variables.
-
-#### Extending
-Extending the capabilities of a parent object by adding new code and behaviours e.g. adding a secondary attack to a child enemy that is not present in any other enemies.
-
-##### oSpecialEnemy::Create
-```gml
-event_inherited();
-
-specialAttack = function () {
-    // Do special damage
-}
-```
+However since we are encapsulating our functionality in methods rather than whole events we choose to inherit them. The overriding here occurs when we re-define the `attack` method. This gives us much more control over what is overridden while still being able to inherit other methods and variables. You may still have a use case for just straight up overriding the whole event though, so use it if you need it.
 
 #### Polymorphic behaviour
 Ability to use different child object types in places where a parent object type is specified (this is called polymorphism) e.g. using the parent object `pEnemy` in collision functions will also check for all child enemy objects because a child enemy is a  `pEnemy`.
@@ -503,13 +503,51 @@ function Mixin() constructor {
 var mixin = new Mixin();
 ```
 
+### Using tags as a marker interface
+
+There is one more built in tool that we can use to classify our objects. You can add tags to assets and then use this information at runtime. Tags can be added to any asset type but we are only interested in tagging object assets here. This will act as a sort of marker interface. It doesn't add or change any behaviour in the object but it does mark it as different from other objects.
+
+We can use this to
+
+1. Check an object or instance to see what tags it has. The object can be treated differently depending on the presence of a given tag(s).
+
+    ```gml
+    // Checks to see if an object or instance has a tag
+    function objectHasTags(object, tags) {
+        var objectIndex = undefined;
+        if (object_exists(object)) {
+            objectIndex = object;
+        }
+        else if (instance_exists(object)) {
+            objectIndex = object.object_index;
+        }
+
+        return objectIndex ? false : asset_has_tags(objectIndex, tags, asset_object);
+    }
+    ```
+
+2. Retrieve a list of all object asset types that share the same tag(s).
+
+    ```gml
+    // A convenience wrapper around the built in function to get assetIds of objects
+    function getObjectAssets(tags) {
+        return tag_get_asset_ids(tags, asset_object);
+    }
+    ```
+    You can then use the asset types to loop over all instances with the tag.
+
+You can also add and remove tags dynamically at runtime, but be aware that since the tag is being added to the object asset it will affect every instance of that object type.
+
+This means tags could be used to define different collision groups separate to an inheritance hierarchy.
+
+
 ### When to use inheritance
 
 We still need inheritance in GameMaker. Firstly, it can be a good tool when your hierarchy of objects is straightforward, small and well defined. If later on you feel like you are encountering issues with inheritance you can refactor to use the methods outlined above.
 
-Secondly, inheritance is the only way to run collision functions over a group of objects at the same time. Especially using the polymorphic capabilities of inheritance.
+Secondly, inheritance is the only way to run collision functions over a group of different object types at the same time using the polymorphic capabilities of inheritance. Tags are a viable alternative but you will need to run the collision check on each asset type that is tagged.
 
-If you have an array of objects with unknown types (such as when using `Mixin.get`) then you need to loop over them and perform the check on each instance separately. This will be slower than using an object asset name but you may find it adequate for your requirements. Ideally though, you would be using collision functions with an object asset id.
+If you have an array of objects with unknown types (such as when using `Mixin.get`) then you need to loop over them and perform the check on each instance separately. This will be slower than using an object asset name but you may still find it adequate for your requirements. Ideally though, you would be using collision functions with an object asset id.
 
 This makes your choice of inheritance very important for optimising collisions. If for a particular collision check you only want to check enemies, then you would need all your different enemies to inherit from a parent `pEnemy`. As we've discussed previously inheritance might be too rigid a solution to capture the behaviours of all your enemies so you can look to include other options mentioned in this chapter to fulfil that role.
 
