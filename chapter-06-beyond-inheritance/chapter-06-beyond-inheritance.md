@@ -457,7 +457,7 @@ var mixin = new Mixin();
 
 `Mixin.get` can be used to get a list of all active instances that have had the mixin applied. This could then be looped over to check for collisions.
 
-`Mixin.is` can be used to check whether an object or struct is of a specific mixin type. This can be used as a safety check before calling a specific method on the target or to run some specific logic if the object is the correct type e.g. destroy an object if it is of mixin type `Broken`. Note that this is making use of the `get_value` and `object_exists` functions defined in [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md).
+`Mixin.is` can be used to check whether an object or struct is of a specific mixin type. This can be used as a safety check before calling a specific method on the target or to run some specific logic if the object is the correct type e.g. destroy an object if it is of mixin type `Broken`. Note that this is making use of the `get_value` and `object_exists` functions defined in the [Method Reference](/method-reference/method-reference.md).
 
 One last word on this implementation of mixins. Since the static class sticks around the entire length of the game it is necessary to to manually remove any instances that no longer exist. For brevity in this tutorial I have chosen to check for this each time `Mixin.get` is called.
 

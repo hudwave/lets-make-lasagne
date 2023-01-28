@@ -88,7 +88,7 @@ This has a number of advantages over direct access:
     ```
 6. Getters and setters can be used as callback functions. This has so many potential uses. You can update or retrieve a value using the callback. 
 7. It is now trivial to debug when a value is set or read. Simply set a break point in the setter or getter.
-8. You can use fluent style setters to configure objects. See [Appendix E](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#e-fluent-style-api) for more details.
+8. You can use fluent style setters to configure objects. See [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#d-fluent-style-api) for more details.
 9. Autocomplete can be used to get a nice filtered list of all properties you can read or modify. By typing `object.set` or `object.get` you will see a filtered list of just the setters or getters on `object`. If you use direct property access you will also see loads of other variables and methods that may not be relevant.
 10. Getters and setters can be overridden to add new behaviour. We will use this fact in Chapter 5 to create a data binding system.
 11. You can apply metadata to getter and setter functions but not to individual variables. This might be useful for things like a serialisation library. See [Appendix C](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#c-method-metadata-annotations) for more details.
@@ -227,7 +227,7 @@ with (oEnemy) {
 
 This will invoke the method `take_damage` on `oEnemy` and access some damage value on the caller using `other`.
 
-If you would prefer a more functional solution to looping over objects in GameMaker then take a look at the method `for_object` in [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#d-convenience-methods). This is a wrapper around `with` that applies a callback function to each object. 
+If you would prefer a more functional solution to looping over objects in GameMaker then take a look at the method `for_objects` in the [Method Reference](/method-reference/method-reference.md#for_objects). This is a wrapper around `with` that applies a callback function to each object. 
 
 It makes use of the `with` statement to provide the fast looping logic but ensures that the callback function is run in the same context that it was written in. This allows us to access our own variables on `self` rather than `other`.
 

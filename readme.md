@@ -35,9 +35,13 @@ The code assumes a version of GameMaker `2023.1` or later. However nearly all of
 
     A look at how inheritance works in GameMaker and alternatives to use when it fails such as Composition and Mixins.
 
-- [Appendix - GameMaker patterns & functions](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md)
+- [Appendix](/appendix/appendix.md)
 
-    A collection of GameMaker specific design patterns and useful functions used through the text.
+    A collection of GameMaker specific design patterns
+
+- [Method Reference](/appendix/appendix.md)
+
+    A reference for methods used throughout the text.
 
 ## Credits & Usage
 
