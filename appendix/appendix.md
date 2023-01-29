@@ -105,7 +105,83 @@ The part that makes this work though is calling the `with` statement on the orig
 
 We also need to build up an array of arguments to pass to the original function. This can be done by using the built in variables `argument_count` and `argument`. There is a new method in the latest beta version `method_call` which can call a method variable and pass in an array of arguments. This should be released in `2023.1`.
 
-### B. Static classes
+### B. Init pattern
+
+Sometimes the initialisation of an object or struct can be quite lengthy or complicated. Since we have been treating the create event and constructor function as if they are an class definition file, the initialisation steps can pollute the clean look of a file and make it less readable.
+
+When defining variables, if I can't finish the declaration in one line I like to use an init method.
+
+```gml
+function ConstructorWithPrivateInit(inputData) constructor {
+    // Variable definitions
+    simpleVar = 5;
+    complicatedVar = undefined;
+
+    // Init method
+    _init = function (inputData) {
+        var processingResult = 0;
+        for (var i = 0; i < array_length(inputData); i++) {
+            // Do some processing
+            processingResult += _processData(inputData[i]);
+        }
+
+        complicatedVar = processingResult;
+    }
+
+    // Method definitions
+    _processData = function() {
+        // Process data
+    }
+
+    // Call init method
+    _init(inputData);
+}
+```
+
+In the example above we only have three sections to the class definition.
+- Variable definitions
+- Init method
+- Method definitions
+
+The init method is called as the last thing before the constructor function completes. This means that everything in the constructor is already defined before you initialise the `complicatedVar`, if you have any methods or other instance variables that it depends on then you no longer need to worry about the order they are declared in.
+
+This is an example of a private init method that is called by the constructor itself. But you can also use the pattern to define a public init method which is called by the creating object instead.
+
+```gml
+function ConstructorWithPublicInit() constructor {
+    // Variable definitions
+    simpleVar = 5;
+    complicatedVar = undefined;
+
+    // Init method
+    init = function (inputData) {
+        var processingResult = 0;
+        for (var i = 0; i < array_length(inputData); i++) {
+            // Do some processing
+            processingResult += _processData(inputData[i]);
+        }
+
+        complicatedVar = processingResult;
+
+        return self;
+    }
+
+    // Method definitions
+    _processData = function() {
+        // Process data
+    }
+}
+
+var instance = new ConstructorWithPublicInit().init(inputData);
+```
+
+This could be useful if you need to defer the initialisation until later but it can also provide an alternative to passing a struct into the  `instance_create_*` methods. This is a way of passing variables dynamically into an object but it is not possible to predefine what these variables are (unless you also put them all in the variable definitions part of the inspector, which is not useful if you don't intend them to be modified in the room editor). By using the public init method you can pre define all the variables as `undefined` in the create event and then pass in the final values after the object has been created.
+
+The public init method returns `self` so that it can be chained onto the end of the constructor function. See the fluent API section in [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#f-fluent-style-api) below for more details.
+
+Note that this is not especially useful for constructors as you can just pass these in directly into the constructor function itself.
+
+### C. Static classes
 
 The behaviour of static variables has changed in version `2023.1`. For constructor functions you can now access static variables using the dot notation after the constructor name.
 
@@ -342,7 +418,7 @@ function Dir ENUM {
 }
 ```
 
-### C. Method metadata (Annotations)
+### D. Method metadata (Annotations)
 
 In GameMaker methods are also structs! You can do this:
 
@@ -405,7 +481,7 @@ function TestRunner() constructor {
 
 This metadata can only be applied to method variables or global script functions. It cannot be applied to regular variables. However if you are following the advice in [Chapter 2](/chapter-02-self-imposed-restrictions/chapter-02-self-imposed-restrictions.md) you will have getter and setter methods for them. Say you are writing a serialisation framework, you can apply any serialisation metadata to the setter, and any deserialisation metadata to the getter.
 
-### D. Fluent style API
+### E. Fluent style API
 
 If you have an object that has a lot of configurable properties then you might create it and then configure it by writing multiple statements one after the other like so.
 

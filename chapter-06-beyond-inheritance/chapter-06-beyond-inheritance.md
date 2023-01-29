@@ -259,7 +259,7 @@ original.methodToOverride();            // Prints 'overridden'
 original.extendingMethod();             // Prints 'new behaviour'
 ```
 
-Notice that we are using a static utility class called `Mixin` to hold all of the mixin related code. This type of class is described in more detail in [Appendix B](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#b-static-classes).
+Notice that we are using a static utility class called `Mixin` to hold all of the mixin related code. This type of class is described in more detail in the [Appendix](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#c-static-classes).
 
 ##### Mixin.gml
 ```gml
@@ -505,7 +505,7 @@ var mixin = new Mixin();
 
 ### Using tags as a marker interface
 
-There is one more built in tool that we can use to classify our objects. You can add tags to assets and then use this information at runtime. Tags can be added to any asset type but we are only interested in tagging object assets here. This will act as a sort of marker interface. It doesn't add or change any behaviour in the object but it does mark it as different from other objects.
+There is one more built in tool that we can use to classify our objects. You can add tags to assets and then use this information at runtime. Tags can be added to any asset type but we are only interested in tagging object assets here. This will act as a sort of marker interface. It doesn't add or change any behaviour in the object but it does mark it as different from other objects. You could use an empty mixin class to achieve the same thing for structs.
 
 We can use this to:
 

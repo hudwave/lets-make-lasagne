@@ -6,23 +6,32 @@
 ## Chapter 3: Dependency Injection
 
 
-This first one is a classic, dependency injection. As the name suggests, it is a mechanism of inserting dependencies into an object rather than creating them directly inside it or globally accessing them. You may be doing this already as it is quite simple. Dependency injection is usually done by passing the dependency in as a constructor argument
+This first one is a classic, dependency injection. As the name suggests, it is a mechanism of inserting dependencies into an object rather than creating them directly inside it or globally accessing them. You may be doing this already as it is quite simple. Dependency injection is usually done by
 
-##### For objects:
-```gml
-instance_create_layer(x, y, layer, oPlayer, { gameController: oGame });
-```
+1. Passing the dependency in a an argument when the object is created
 
-##### For structs:
-```gml
-new ConstructorFunction(oGame);
-```
+    ##### For constructor structs:
+    ```gml
+    new ConstructorFunction(oGame);
+    ```
 
-Or by setting the value using a setter method
-```gml
-var player = instance_create_layer(x, y, layer, oPlayer);
-player.setGameController(oGame);
-```
+    ##### For objects:
+    ```gml
+    instance_create_layer(x, y, layer, oPlayer, { gameController: oGame });
+    ```
+
+    However For objects consider using an init method instead so that you can predefine all the variables in the create event and make the code more readable. See the [Appendix](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#c-init-pattern) for more details.
+
+    ```gml
+    var object = instance_create_layer(x, y, layer, oPlayer).init(oGame);
+    ```
+
+2. by setting the value using a setter method
+    ##### For both objects and structs:
+    ```gml
+    var player = instance_create_layer(x, y, layer, oPlayer);
+    player.setGameController(oGame);
+    ```
 
 The advantage of doing things this way is the object being passed the dependency no longer has to create or configure the dependency itself. It is generally not the responsibility of an object to create or configure another object that it just wants to use. This is known as separation of concerns, we have separated the construction and configuration of the object from its use.
 

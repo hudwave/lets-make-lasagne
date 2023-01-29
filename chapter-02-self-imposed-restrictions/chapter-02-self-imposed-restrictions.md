@@ -88,10 +88,10 @@ This has a number of advantages over direct access:
     ```
 6. Getters and setters can be used as callback functions. This has so many potential uses. You can update or retrieve a value using the callback. 
 7. It is now trivial to debug when a value is set or read. Simply set a break point in the setter or getter.
-8. You can use fluent style setters to configure objects. See [Appendix D](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#d-fluent-style-api) for more details.
+8. You can use fluent style setters to configure objects. See [Appendix](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#f-fluent-style-api) for more details.
 9. Autocomplete can be used to get a nice filtered list of all properties you can read or modify. By typing `object.set` or `object.get` you will see a filtered list of just the setters or getters on `object`. If you use direct property access you will also see loads of other variables and methods that may not be relevant.
 10. Getters and setters can be overridden to add new behaviour. We will use this fact in Chapter 5 to create a data binding system.
-11. You can apply metadata to getter and setter functions but not to individual variables. This might be useful for things like a serialisation library. See [Appendix C](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#c-method-metadata-annotations) for more details.
+11. You can apply metadata to getter and setter functions but not to individual variables. This might be useful for things like a serialisation library. See the [Appendix](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#d-method-metadata-annotations) for more details.
 
 The main disadvantages are verbosity:
 1. You need to write more code and that takes effort, I sympathise 😩
@@ -267,7 +267,7 @@ In GameMaker it is possible to add new variables to an object or constructor str
 
 For a constructor function all variables should be defined in the function itself. For an object you can define variables in 'Variable Definitions' section of the object inspector, or by defining them in the create event.
 
-It is also possible to define variables by passing in a struct in the `instance_create_` methods. However I would be careful with this method as it may not always be clear what variables have been added to the instance. You can imagine that if you have two different files that instantiate the instances with different variables then it could become messy.
+It is also possible to define variables by passing in a struct in the `instance_create_*` methods. However I would be careful with this method as it may not always be clear what variables have been added to the instance. You can imagine that if you have two different files that instantiate the instances with different variables then it could become messy.
 
 It is also possible to add new properties from another object. But similar to the reasoning before in the `with` statement, this can lead to confusing code that is harder to maintain. If all the variables are pre-defined anyone reading the code has a clear picture of everything the object can do.
 
