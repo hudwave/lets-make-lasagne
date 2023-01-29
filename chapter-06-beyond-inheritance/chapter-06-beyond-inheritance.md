@@ -507,39 +507,43 @@ var mixin = new Mixin();
 
 There is one more built in tool that we can use to classify our objects. You can add tags to assets and then use this information at runtime. Tags can be added to any asset type but we are only interested in tagging object assets here. This will act as a sort of marker interface. It doesn't add or change any behaviour in the object but it does mark it as different from other objects.
 
-We can use this to
+We can use this to:
 
 1. Check an object or instance to see what tags it has. The object can be treated differently depending on the presence of a given tag(s).
 
     ```gml
-    // Checks to see if an object or instance has a tag
-    function objectHasTags(object, tags) {
-        var objectIndex = undefined;
-        if (object_exists(object)) {
-            objectIndex = object;
-        }
-        else if (instance_exists(object)) {
-            objectIndex = object.object_index;
-        }
+    // Checks to see if an object or instance has all or any of the supplied tags
+	function hasTags(objectOrInstance, tags, any = false) {
+		var objectIndex = undefined;
+		if (object_exists(objectOrInstance)) {
+			objectIndex = objectOrInstance;
+		}
+		else if (instance_exists(objectOrInstance)) {
+			objectIndex = objectOrInstance.object_index;
+		}
 
-        return objectIndex ? false : asset_has_tags(objectIndex, tags, asset_object);
-    }
+		var tagResult = false;
+		if (objectIndex) {
+			tagResult = any ? asset_has_any_tag(objectIndex, tags, asset_object) : asset_has_tags(objectIndex, tags, asset_object);
+		}
+
+		return tagResult;
+	}
     ```
 
 2. Retrieve a list of all object asset types that share the same tag(s).
 
     ```gml
-    // A convenience wrapper around the built in function to get assetIds of objects
+    // A convenience wrapper around the built in function to get assetIds of objects that have the supplied tags
     function getObjectAssets(tags) {
         return tag_get_asset_ids(tags, asset_object);
     }
     ```
-    You can then use the asset types to loop over all instances with the tag.
-
-You can also add and remove tags dynamically at runtime, but be aware that since the tag is being added to the object asset it will affect every instance of that object type.
+    You can then use the returned list of asset types to loop over all instances with the supplied tags.
 
 This means tags could be used to define different collision groups separate to an inheritance hierarchy.
 
+You can also add and remove tags dynamically at runtime, but be aware that since the tag is being added to the object asset itself, it will affect every instance of that object type, even instances created in the future.
 
 ### When to use inheritance
 
