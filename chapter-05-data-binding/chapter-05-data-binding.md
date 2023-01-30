@@ -420,7 +420,7 @@ Data binding should probably be used sparingly. The fact that two completely sep
 
 2. You may find that library code doesn't play nicely with this system because they won't be using setters and getters to modify properties on your objects. This is just something to be aware of and you can probably work around it for most use cases.
 
-3. Updating the value on the target does not change the source value and will be overwritten again when the source next changes. If the target absolutely needs to make changes to the binding value then it needs to communicate that change back to the source object rather than modify the value directly. The source can set the value and trigger the update on the target.
+3. Updating the value on the target manually does not change the source value and will be overwritten again when the source next changes. If the target absolutely needs to make changes to the binding value then it needs to communicate that change back to the source object rather than modify the value directly. The source can set the value and trigger the update on the target.
 
 #### Improvements
 

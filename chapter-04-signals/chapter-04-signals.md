@@ -127,7 +127,7 @@ emit = function (payload = undefined) {
 }
 ```
 
-Notice that we have added an optional argument called payload. This will allow you to pass information over with the signal if required. For example if each of the coins had a different value we could pass the coin over when the signal is emitted and the game controller can read the value from the coin.
+Notice that we have added an optional argument called payload. This will allow you to pass information over with the signal if required. For example if each of the coins had a different value we could pass the coin itself over when the signal is emitted and the game controller can read the value from the coin.
 
 ##### oCoin::Create
 ```gml
@@ -194,7 +194,7 @@ function Listener(_target, _callback) constructor {
 }
 ```
 
-Now that the struct is wrapped in a weak reference the `getTarget` method will return the weak reference instead of the struct itself which is not what we want. We need to have a different implementation of the getter based on whether or not the target is an object or an instance. Another win for using getters and setters! We'll also add a convenience method to check whether the object or struct still exists. This will also have a different implementation for objects and structs.
+Now that the struct is wrapped in a weak reference the `getTarget` method will return the weak reference instead of the struct itself which is not what we want. We need to have a different implementation of the getter based on whether or not the target is an object or an instance. We'll also add a convenience method to check whether the object or struct still exists. This will also have a different implementation for objects and structs.
 
 ##### Signals.gml::Listener
 ```gml
@@ -286,7 +286,7 @@ function Listener(_target, _callback) constructor {
 }
 ```
 
-The `init` method can be called at the end of the constructor function or it offers the possibility to delay the initialisation of the object until later. Lets now update the `Signals` class to use the new exists method.
+The `init` method can be called at the end of the constructor function or it offers the possibility to delay the initialisation of the object until later. You can read more about the init method pattern in the [Appendix](/appendix-gamemaker-patterns/appendix-gamemaker-patterns.md#b-init-pattern). Lets now update the `Signals` class to use the new exists method.
 
 ##### Signals.gml::Signal
 ```gml
