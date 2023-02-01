@@ -60,7 +60,6 @@ Next we define the closure function remembering that any captured variable will 
 
 Finally we call the function `closure` (which we will define below) to do the magic and capture the local variables. This will return a new function so be careful to actually use the returned value.
 
-##### DataBinding.gml::closure
 ```gml
 function closure(scopeVars, func, context = undefined) {
     // Ensure there is a context
@@ -103,7 +102,7 @@ What we do next is create a function `closureFunc` that will wrap around our ori
 
 The part that makes this work though is calling the `with` statement on the original `self` context (stored as `__this` in `scopeVars`). The `with` statement allows us to access the struct of `scopeVars` on `other` and everything on `self` directly.
 
-We also need to build up an array of arguments to pass to the original function. This can be done by using the built in variables `argument_count` and `argument`. There is a new method in the latest beta version `method_call` which can call a method variable and pass in an array of arguments. This should be released in `2023.1`.
+We also need to build up an array of arguments to pass to the original function. This can be done by using the built in variables `argument_count` and `argument`. We can then use `method_call` which will call a method variable and pass in an array of arguments, this behaves similarly to `script_execute` for script functions.
 
 ### B. Init pattern
 
@@ -192,8 +191,10 @@ function StaticTest() constructor {
         // ...
     }
 }
+// Initialise the statics by calling the constructor function without the new keyword
+StaticTest();
 
-// Create an instance to initialise the statics
+// Or create an instance to initialise the statics
 var instance = new StaticTest();
 
 // Old style access
@@ -203,9 +204,13 @@ instance.test();
 StaticTest.test();
 ```
 
-The only catch is that the constructor needs to be called at least once to initialise the statics. Then the instance that is created can be thrown away and the statics are still accessible.
+The only catch is that the statics need to be initialised before they are used. This can be done in two ways:
 
-Previously you would have needed to access the static variables through an instance but now they are essentially globally accessible through the constructor function itself.
+1. Call the constructor function without the `new` keyword. Be aware that if there are any non-static variables declared in the constructor these will be added to the global scope!
+
+2. If you do have non-static variables then it is better to create an instance using the `new` keyword. Then the instance that is created can be thrown away and the statics are still accessible.
+
+Previously you would have needed an instance to access the static variables, but now they are essentially globally accessible through the constructor function itself.
 
 This opens up some interesting possibilities.
 
@@ -216,8 +221,8 @@ This opens up some interesting possibilities.
 If you are using an older version of GameMaker you can still make of use these patterns, it's just the syntax won't look as nice. Do this by storing the initialising instance as a global variable and accessing the methods via `global` like so.
 
 ```gml
-global.staticTest = new StaticTest();
-global.staticTest.test();
+global.StaticTest = new StaticTest();
+global.StaticTest.test();
 ```
 
 #### Namespace
@@ -246,7 +251,7 @@ function Array() constructor {
         // ...
     }
 }
-var instance = new Array();
+Array();
 ```
 
 This can be accessed as `Array.shuffle()` or `Array.sort()`. There is no particular advantage of doing things this way but some people may prefer the syntax. Feather doesn't currently auto complete all of the static variables but hopefully this will change in future versions.
@@ -264,7 +269,7 @@ function StaticCounter() constructor {
         count++;
     }
 }
-var instance = new StaticCounter();
+StaticCounter();
 ```
 
 In this regard it will behave similarly to a singleton class in that there will only ever be one instance in the game. This means instead of using `global` to store data or references to global objects, we can use the static class instead. Just remember to preface anything that needs to be accessible by the static class with `static`.

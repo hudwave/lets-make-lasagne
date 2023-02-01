@@ -47,7 +47,7 @@ attack = function () {
 
 Notice that we have still inherited the original create event using `event_inherited` which will run the parent's create event first. You might think that we should have chosen the override option instead, as by inheriting the event it would only allow us to extend the parent's behaviour.
 
-However since we are encapsulating our functionality in methods rather than whole events we choose to inherit them. The overriding here occurs when we re-define the `attack` method. This gives us much more control over what is overridden while still being able to inherit other methods and variables. You may still have a use case for just straight up overriding the whole event though, so use it if you need it.
+However since we are encapsulating our functionality in methods rather than whole events, we choose to inherit them. The overriding here occurs when we re-define the `attack` method. This gives us much more control over what is overridden, while still being able to inherit other methods and variables. You may still have a use case for just straight up overriding the whole event though, so use it if you need it.
 
 #### Polymorphic behaviour
 Ability to use different child object types in places where a parent object type is specified (this is called polymorphism) e.g. using the parent object `pEnemy` in collision functions will also check for all child enemy objects because a child enemy is a  `pEnemy`.
@@ -62,9 +62,9 @@ Inheritance does have its limitations though so it's important to know what thes
 
 Inheritance has a bad reputation in the object orientated world. However since GameMaker is not fully object orientated and is not strongly typed, a lot of the reasons for avoiding inheritance are not strictly applicable. We can also manoeuvre around inheritance in other ways that do not depend on coding to an interface as you would in an object orientated language.
 
-One problem that you may encounter however is when inheritance cannot adequately describe your hierarchy of objects. This usually happens when there is some logic or feature that is only applicable to some of the child objects even though they share other common behaviour.
+One problem that you may encounter however is when inheritance cannot adequately describe your hierarchy of objects. This usually happens when there is some logic or feature that is only applicable to a subset of the child objects even though they share other common behaviour with all the other children.
 
-You either end up with some of your child objects inheriting code that they do not ever intend to use; or you have to duplicate the specific code across the other child objects that need it.
+You either end up with some of your child objects inheriting code that they do not ever intend to use; or you have to duplicate the specific code across only the child objects that need it.
 
 To demonstrate this lets use the classic vehicle analogy. We want to model a bunch of different cars using inheritance. Cars will have a different sprite, top speed, engine size and fuel capacity. Specific models of car can inherit from a parent `pCar` object.
 
@@ -139,7 +139,7 @@ If you have logic encapsulated in another object then it is trivial to make inst
 
 #### Overriding and polymorphic behaviour
 
-These two have been combined into one as they both happen by the same mechanism. Any object forms part of the composition can be replaced with another object that satisfies the duck typing requirement. This means that an existing object (behaviour) on the parent can be changed (overridden).
+These two have been combined into one as they both happen by the same mechanism. Any object that forms part of the composition can be replaced with another object that satisfies the duck typing requirement. This means that an existing object (behaviour) on the parent can be changed (overridden).
 
 This is one advantage that composition has over inheritance which is static. Using composition you can swap out the object to change the behaviour at runtime.
 
@@ -202,7 +202,7 @@ test.baseMethod();          // Prints 'original'
 test.extendedMethod();      // Prints 'new behaviour'
 ```
 
-This is very powerful but if this not used in a clear and explicit manner then it can lead to code which is confusing and hard to debug. By this I mean we don't want to be adding or overriding properties from any old object. This is similar to the reasoning we use in the second chapter which argues against direct property access, the `with` statement and adding new properties.
+This is very powerful but if this not used in a clear and explicit manner then it can lead to code which is confusing and hard to debug. By this I mean we don't want to be adding or overriding properties from any old object. This is similar to the reasoning we use in the second chapter which argues against direct property access, the `with` statement and adding new properties. 
 
 So what is a good way to exploit these features? 
 

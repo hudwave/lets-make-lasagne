@@ -26,7 +26,7 @@ This first one is a classic, dependency injection. As the name suggests, it is a
     var object = instance_create_layer(x, y, layer, oPlayer).init(oGame);
     ```
 
-2. by setting the value using a setter method
+2. By setting the value using a setter method
     ##### For both objects and structs:
     ```gml
     var player = instance_create_layer(x, y, layer, oPlayer);
