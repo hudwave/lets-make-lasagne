@@ -39,7 +39,7 @@ The code assumes a version of GameMaker `2023.1` or later. However nearly all of
 
     A collection of GameMaker specific design patterns
 
-- [Method Reference](/appendix/appendix.md)
+- [Method Reference](/method-reference/method-reference.md)
 
     A reference for methods used throughout the text.
 
